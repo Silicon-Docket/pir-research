@@ -118,6 +118,37 @@ from early second-series volumes rather than the true first series.
 fixes the record *size*; the record *count* is taken from CAP's own description
 of its coverage.
 
+**The "post-2000" stratum is bounded above by CAP's coverage, which ends in
+2019.** This was not stated when the stratum was defined and it should have
+been, because the worry the wider sample was built to test is specifically that
+*modern* names run long. Checked against `static.case.law` on 2026-09-11, the
+last volume in each current-series reporter:
+
+| reporter | volumes | year range |
+|---|---|---|
+| `a3d` | 253 | 2004-2019 |
+| `p3d` | 447 | 2000-2019 |
+| `sw3d` | 579 | 1993-2018 |
+| `ne3d` | 130 | 2003-2018 |
+| `f3d` | 935 | 1993-2019 |
+| `f-supp-3d` | 386 | 2005-2019 |
+| `us` | 572 | 1798-2017 |
+| `a2d` | 967 | 1943-2010 |
+| `so2d` | 999 | 1941-2009 |
+
+There is also no third series at all for two regions: `nw3d` and `se3d` both
+return 404, which is why `tools/fetch_cap.py` carries `nw2d` and `se2d` in its
+third-series line. Those two slugs therefore appear twice in `REPORTERS`, and
+the tool deduplicates with `dict.fromkeys` so they are not double-weighted.
+
+So "post-2000" means **2001 to 2019**, and the conclusion two subsections above,
+that the long-modern-names worry is dead, holds over that window and says
+nothing about cases decided after 2019. Nothing in this file depends on the
+missing years: m = 29312 is fixed by the payload mean, the mean is stable to
+within 1.4% between two independently drawn samples, and every stratum sits
+between 36.16 and 44.19 B. But the bound belongs in the sample definition rather
+than in a reader's inference from a reporter list.
+
 ### The 96 B option, named and not taken
 
 | entry width | intact | truncated of 6.7M | DB | hint |
