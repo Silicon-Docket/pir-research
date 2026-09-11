@@ -1,0 +1,18 @@
+{
+  "arm": "gpu",
+  "device": {"name": "NVIDIA GeForce GTX 1070", "cc": "6.1", "sms": 15, "bus_bits": 256, "peak_gbps": 256.3, "jit_ms": 0.6},
+  "host_threads": 12,
+  "batch": 1,
+  "scheme": {"name": "SimplePIR", "n": 1024, "log_p": 8, "cbd_k": 82},
+  "corpus": "synthetic (shape faithful, contents not case law)",
+  "rows": [
+    {"m": 2048, "db_bytes": 4194304, "upload_ms": 1.7, "gpu_scan_ms": 0.0596, "gpu_answer_ms": 0.0576, "gpu_answer_spread": 0.2006, "cpu_answer_parallel_ms": 1.25, "multiplier": 0.9672, "speedup_over_cpu": 21.68, "bit_identical": true, "decoded": true},
+    {"m": 4096, "db_bytes": 16777216, "upload_ms": 4.6, "gpu_scan_ms": 0.1223, "gpu_answer_ms": 0.1113, "gpu_answer_spread": 0.2108, "cpu_answer_parallel_ms": 2.09, "multiplier": 0.9100, "speedup_over_cpu": 18.79, "bit_identical": true, "decoded": true},
+    {"m": 8192, "db_bytes": 67108864, "upload_ms": 19.6, "gpu_scan_ms": 0.3396, "gpu_answer_ms": 0.3530, "gpu_answer_spread": 0.1493, "cpu_answer_parallel_ms": 3.06, "multiplier": 1.0394, "speedup_over_cpu": 8.67, "bit_identical": true, "decoded": true},
+    {"m": 16384, "db_bytes": 268435456, "upload_ms": 58.6, "gpu_scan_ms": 1.2912, "gpu_answer_ms": 1.3064, "gpu_answer_spread": 0.0257, "cpu_answer_parallel_ms": 9.56, "multiplier": 1.0117, "speedup_over_cpu": 7.32, "bit_identical": true, "decoded": true},
+    {"m": 23168, "db_bytes": 536756224, "upload_ms": 120.3, "gpu_scan_ms": 2.5365, "gpu_answer_ms": 2.4668, "gpu_answer_spread": 0.0008, "cpu_answer_parallel_ms": 20.55, "multiplier": 0.9725, "speedup_over_cpu": 8.33, "bit_identical": true, "decoded": true},
+    {"m": 29312, "db_bytes": 859193344, "upload_ms": 199.1, "gpu_scan_ms": 3.9972, "gpu_answer_ms": 4.0192, "gpu_answer_spread": 0.0008, "cpu_answer_parallel_ms": 28.19, "multiplier": 1.0055, "speedup_over_cpu": 7.01, "bit_identical": true, "decoded": true},
+    {"m": 32768, "db_bytes": 1073741824, "upload_ms": 238.9, "gpu_scan_ms": 4.9349, "gpu_answer_ms": 4.8886, "gpu_answer_spread": 0.0007, "cpu_answer_parallel_ms": 35.43, "multiplier": 0.9906, "speedup_over_cpu": 7.25, "bit_identical": true, "decoded": true},
+    {"m": 46336, "db_bytes": 2147024896, "upload_ms": 469.4, "gpu_scan_ms": 9.7659, "gpu_answer_ms": 9.8632, "gpu_answer_spread": 0.0003, "cpu_answer_parallel_ms": 69.64, "multiplier": 1.0100, "speedup_over_cpu": 7.06, "bit_identical": true, "decoded": true}
+  ]
+}

@@ -1,0 +1,24 @@
+[package]
+name = "pir-bench"
+description = "Measures the linear-scan floor that bounds any PIR scheme from below, swept across the host's cache hierarchy."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[lib]
+name = "pir_bench"
+path = "src/lib.rs"
+
+[[bin]]
+name = "pir-bench"
+path = "src/main.rs"
+
+# No dependencies, deliberately. The floor is a measurement of this machine
+# moving bytes; every crate added between the loop and the memory is something
+# that has to be argued about when the number looks wrong.
+[dependencies]
+
+[lints]
+workspace = true

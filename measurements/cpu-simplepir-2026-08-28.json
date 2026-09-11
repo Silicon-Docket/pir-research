@@ -1,0 +1,19 @@
+{
+  "arm": "cpu",
+  "cpu": "11th Gen Intel(R) Core(TM) i5-11400 @ 2.60GHz",
+  "threads": 12,
+  "l3_bytes": 12582912,
+  "batch": 1,
+  "scheme": {"name": "SimplePIR", "n": 1024, "log_p": 8, "cbd_k": 82},
+  "corpus": "synthetic (shape faithful, contents not case law)",
+  "rows": [
+    {"m": 2048, "db_bytes": 4194304, "hint_bytes": 8388608, "scan_single_s": 0.000056, "scan_parallel_s": 0.000490, "answer_single_s": 0.000351, "answer_parallel_s": 0.000438, "multiplier_single": 6.2337, "multiplier_parallel": 0.8937, "answer_single_spread": 0.0082, "margin_sigmas": 196.4, "decoded": true},
+    {"m": 4096, "db_bytes": 16777216, "hint_bytes": 16777216, "scan_single_s": 0.000510, "scan_parallel_s": 0.000634, "answer_single_s": 0.001592, "answer_parallel_s": 0.000607, "multiplier_single": 3.1238, "multiplier_parallel": 0.9566, "answer_single_spread": 0.0152, "margin_sigmas": 138.9, "decoded": true},
+    {"m": 8192, "db_bytes": 67108864, "hint_bytes": 33554432, "scan_single_s": 0.002868, "scan_parallel_s": 0.002447, "answer_single_s": 0.006346, "answer_parallel_s": 0.002469, "multiplier_single": 2.2125, "multiplier_parallel": 1.0090, "answer_single_spread": 0.0252, "margin_sigmas": 98.2, "decoded": true},
+    {"m": 16384, "db_bytes": 268435456, "hint_bytes": 67108864, "scan_single_s": 0.011703, "scan_parallel_s": 0.009017, "answer_single_s": 0.024893, "answer_parallel_s": 0.009143, "multiplier_single": 2.1271, "multiplier_parallel": 1.0140, "answer_single_spread": 0.0164, "margin_sigmas": 69.5, "decoded": true},
+    {"m": 23168, "db_bytes": 536756224, "hint_bytes": 94896128, "scan_single_s": 0.023652, "scan_parallel_s": 0.017595, "answer_single_s": 0.049774, "answer_parallel_s": 0.017973, "multiplier_single": 2.1044, "multiplier_parallel": 1.0215, "answer_single_spread": 0.0112, "margin_sigmas": 58.4, "decoded": true},
+    {"m": 29312, "db_bytes": 859193344, "hint_bytes": 120061952, "scan_single_s": 0.037576, "scan_parallel_s": 0.028136, "answer_single_s": 0.080321, "answer_parallel_s": 0.027957, "multiplier_single": 2.1376, "multiplier_parallel": 0.9936, "answer_single_spread": 0.0563, "margin_sigmas": 51.9, "decoded": true},
+    {"m": 32768, "db_bytes": 1073741824, "hint_bytes": 134217728, "scan_single_s": 0.047270, "scan_parallel_s": 0.034974, "answer_single_s": 0.100539, "answer_parallel_s": 0.034724, "multiplier_single": 2.1269, "multiplier_parallel": 0.9929, "answer_single_spread": 0.0156, "margin_sigmas": 49.1, "decoded": true},
+    {"m": 46336, "db_bytes": 2147024896, "hint_bytes": 189792256, "scan_single_s": 0.097163, "scan_parallel_s": 0.069404, "answer_single_s": 0.205469, "answer_parallel_s": 0.069583, "multiplier_single": 2.1147, "multiplier_parallel": 1.0026, "answer_single_spread": 0.0341, "margin_sigmas": 41.3, "decoded": true}
+  ]
+}

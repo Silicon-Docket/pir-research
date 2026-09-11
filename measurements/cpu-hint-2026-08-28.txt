@@ -1,0 +1,98 @@
+pir-hint — building H = D·A on the CPU
+
+cpu:    11th Gen Intel(R) Core(TM) i5-11400 @ 2.60GHz
+host:   12 threads · L3 12 MiB
+scheme: n = 1024, p = 256, q = 2^32
+blocking: 64 rows of H x 256 rows of A
+corpus: synthetic; shape faithful, contents are not case law
+published CPU figure to beat: < 4 MB/s per core
+
+m = 2048   DB     4.2 MB · A    8.4 MB · H    8.4 MB
+    expand A           0.01 s
+    hint   1T          0.47 s  (   9.1 GMAC/s,  8.90 MB/s/core, 2.2x published)  reps 3
+    hint  12T          0.09 s  (  46.1 GMAC/s)                                 reps 3
+    one rebuild = 1129 single-core queries (0.4 ms each) · 0.0001 core-hours
+    H·s == D·(A·s)  OK   ·  decode from materialised H  OK   [809p3d971]
+    D is 75.8% zero (padding; the zero-skip this does not take)
+
+m = 4096   DB    16.8 MB · A   16.8 MB · H   16.8 MB
+    expand A           0.01 s
+    hint   1T          1.69 s  (  10.1 GMAC/s,  9.91 MB/s/core, 2.5x published)  reps 3
+    hint  12T          0.37 s  (  46.8 GMAC/s)                                 reps 3
+    one rebuild = 1051 single-core queries (1.6 ms each) · 0.0005 core-hours
+    H·s == D·(A·s)  OK   ·  decode from materialised H  OK   [623p3d975]
+    D is 75.9% zero (padding; the zero-skip this does not take)
+
+m = 8192   DB    67.1 MB · A   33.6 MB · H   33.6 MB
+    expand A           0.02 s
+    hint   1T          6.87 s  (  10.0 GMAC/s,  9.77 MB/s/core, 2.4x published)  reps 3
+    hint  12T          1.41 s  (  48.7 GMAC/s)                                 reps 3
+    one rebuild = 1086 single-core queries (6.3 ms each) · 0.0019 core-hours
+    H·s == D·(A·s)  OK   ·  decode from materialised H  OK   [194a2d1008]
+    D is 75.9% zero (padding; the zero-skip this does not take)
+
+m = 16384  DB   268.4 MB · A   67.1 MB · H   67.1 MB
+    expand A           0.05 s
+    hint   1T         27.72 s  (   9.9 GMAC/s,  9.68 MB/s/core, 2.4x published)  reps 2
+    hint  12T          6.84 s  (  40.2 GMAC/s)                                 reps 3
+    one rebuild = 1020 single-core queries (27.2 ms each) · 0.0077 core-hours
+    H·s == D·(A·s)  OK   ·  decode from materialised H  OK   [324a2d1493]
+    D is 75.9% zero (padding; the zero-skip this does not take)
+
+m = 23168  DB   536.8 MB · A   94.9 MB · H   94.9 MB
+    expand A           0.07 s
+    hint   1T         55.08 s  (  10.0 GMAC/s,  9.75 MB/s/core, 2.4x published)  reps 1
+    hint  12T         15.33 s  (  35.9 GMAC/s)                                 reps 3
+    one rebuild = 1049 single-core queries (52.5 ms each) · 0.0153 core-hours
+    H·s == D·(A·s)  OK   ·  decode from materialised H  OK   [612us100]
+    D is 75.9% zero (padding; the zero-skip this does not take)
+
+m = 29312  DB   859.2 MB · A  120.1 MB · H  120.1 MB  <- the real index size
+    expand A           0.08 s
+    hint   1T         89.61 s  (   9.8 GMAC/s,  9.59 MB/s/core, 2.4x published)  reps 1
+    hint  12T         24.96 s  (  35.3 GMAC/s)                                 reps 2
+    one rebuild = 1043 single-core queries (85.9 ms each) · 0.0249 core-hours
+    H·s == D·(A·s)  OK   ·  decode from materialised H  OK   [226us884]
+    D is 75.9% zero (padding; the zero-skip this does not take)
+
+m = 32768  DB  1073.7 MB · A  134.2 MB · H  134.2 MB
+    expand A           0.09 s
+    hint   1T        112.50 s  (   9.8 GMAC/s,  9.54 MB/s/core, 2.4x published)  reps 1
+    hint  12T         32.13 s  (  34.2 GMAC/s)                                 reps 1
+    one rebuild = 1060 single-core queries (106.2 ms each) · 0.0312 core-hours
+    H·s == D·(A·s)  OK   ·  decode from materialised H  OK   [790ne2d476]
+    D is 75.9% zero (padding; the zero-skip this does not take)
+
+m = 46336  DB  2147.0 MB · A  189.8 MB · H  189.8 MB
+    expand A           0.32 s
+    hint   1T        224.10 s  (   9.8 GMAC/s,  9.58 MB/s/core, 2.4x published)  reps 1
+    hint  12T         66.74 s  (  32.9 GMAC/s)                                 reps 1
+    one rebuild = 1056 single-core queries (212.3 ms each) · 0.0623 core-hours
+    H·s == D·(A·s)  OK   ·  decode from materialised H  OK   [65us429]
+    D is 75.9% zero (padding; the zero-skip this does not take)
+
+At the real index size (m = 29312, 859 MB):
+  one rebuild: 89.6 s on one core (0.0249 core-hours), 25.0 s across 12
+  9.59 MB/s/core against a published figure of under 4 — 2.4x
+  a rebuild costs what 1043 single-core queries cost
+
+--- json ---
+{
+  "arm": "cpu-hint",
+  "cpu": "11th Gen Intel(R) Core(TM) i5-11400 @ 2.60GHz",
+  "threads": 12,
+  "row_block": 64,
+  "contract_block": 256,
+  "published_mb_per_s_per_core": 4,
+  "corpus": "synthetic (shape faithful, contents not case law)",
+  "rows": [
+    {"m": 2048, "db_bytes": 4194304, "hint_bytes": 8388608, "expand_a_s": 0.0057, "hint_single_s": 0.4710, "hint_single_reps": 3, "hint_parallel_s": 0.0932, "hint_parallel_reps": 3, "answer_single_s": 0.000417, "gmac_per_s_single": 9.119, "gmac_per_s_parallel": 46.108, "mb_per_s_per_core": 8.905, "rebuild_in_queries": 1129.1, "core_hours": 0.00013, "zero_fraction": 0.7584, "hs_matches": true, "decoded": true},
+    {"m": 4096, "db_bytes": 16777216, "hint_bytes": 16777216, "expand_a_s": 0.0114, "hint_single_s": 1.6932, "hint_single_reps": 3, "hint_parallel_s": 0.3669, "hint_parallel_reps": 3, "answer_single_s": 0.001611, "gmac_per_s_single": 10.147, "gmac_per_s_parallel": 46.828, "mb_per_s_per_core": 9.909, "rebuild_in_queries": 1051.3, "core_hours": 0.00047, "zero_fraction": 0.7585, "hs_matches": true, "decoded": true},
+    {"m": 8192, "db_bytes": 67108864, "hint_bytes": 33554432, "expand_a_s": 0.0229, "hint_single_s": 6.8666, "hint_single_reps": 3, "hint_parallel_s": 1.4112, "hint_parallel_reps": 3, "answer_single_s": 0.006323, "gmac_per_s_single": 10.008, "gmac_per_s_parallel": 48.696, "mb_per_s_per_core": 9.773, "rebuild_in_queries": 1085.9, "core_hours": 0.00191, "zero_fraction": 0.7586, "hs_matches": true, "decoded": true},
+    {"m": 16384, "db_bytes": 268435456, "hint_bytes": 67108864, "expand_a_s": 0.0475, "hint_single_s": 27.7187, "hint_single_reps": 2, "hint_parallel_s": 6.8367, "hint_parallel_reps": 3, "answer_single_s": 0.027166, "gmac_per_s_single": 9.917, "gmac_per_s_parallel": 40.206, "mb_per_s_per_core": 9.684, "rebuild_in_queries": 1020.4, "core_hours": 0.00770, "zero_fraction": 0.7586, "hs_matches": true, "decoded": true},
+    {"m": 23168, "db_bytes": 536756224, "hint_bytes": 94896128, "expand_a_s": 0.0662, "hint_single_s": 55.0759, "hint_single_reps": 1, "hint_parallel_s": 15.3273, "hint_parallel_reps": 3, "answer_single_s": 0.052486, "gmac_per_s_single": 9.980, "gmac_per_s_parallel": 35.860, "mb_per_s_per_core": 9.746, "rebuild_in_queries": 1049.3, "core_hours": 0.01530, "zero_fraction": 0.7586, "hs_matches": true, "decoded": true},
+    {"m": 29312, "db_bytes": 859193344, "hint_bytes": 120061952, "expand_a_s": 0.0843, "hint_single_s": 89.6057, "hint_single_reps": 1, "hint_parallel_s": 24.9585, "hint_parallel_reps": 2, "answer_single_s": 0.085927, "gmac_per_s_single": 9.819, "gmac_per_s_parallel": 35.251, "mb_per_s_per_core": 9.589, "rebuild_in_queries": 1042.8, "core_hours": 0.02489, "zero_fraction": 0.7586, "hs_matches": true, "decoded": true},
+    {"m": 32768, "db_bytes": 1073741824, "hint_bytes": 134217728, "expand_a_s": 0.0923, "hint_single_s": 112.4974, "hint_single_reps": 1, "hint_parallel_s": 32.1250, "hint_parallel_reps": 1, "answer_single_s": 0.106151, "gmac_per_s_single": 9.774, "gmac_per_s_parallel": 34.226, "mb_per_s_per_core": 9.545, "rebuild_in_queries": 1059.8, "core_hours": 0.03125, "zero_fraction": 0.7586, "hs_matches": true, "decoded": true},
+    {"m": 46336, "db_bytes": 2147024896, "hint_bytes": 189792256, "expand_a_s": 0.3182, "hint_single_s": 224.1039, "hint_single_reps": 1, "hint_parallel_s": 66.7361, "hint_parallel_reps": 1, "answer_single_s": 0.212271, "gmac_per_s_single": 9.810, "gmac_per_s_parallel": 32.944, "mb_per_s_per_core": 9.580, "rebuild_in_queries": 1055.7, "core_hours": 0.06225, "zero_fraction": 0.7586, "hs_matches": true, "decoded": true}
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "cpu": "11th Gen Intel(R) Core(TM) i5-11400 @ 2.60GHz",
+  "threads": 12,
+  "l3_bytes": 12582912,
+  "repeats": 3,
+  "min_sample_ms": 50,
+  "rows": [
+    {"mib": 2, "bytes": 2097152, "single_gbps": 65.1027, "single_spread": 0.0061, "parallel_gbps": 5.0276, "parallel_spread": 0.1440},
+    {"mib": 4, "bytes": 4194304, "single_gbps": 73.9997, "single_spread": 0.1489, "parallel_gbps": 9.2886, "parallel_spread": 0.1425},
+    {"mib": 16, "bytes": 16777216, "single_gbps": 33.0496, "single_spread": 0.0386, "parallel_gbps": 33.7372, "parallel_spread": 0.1604},
+    {"mib": 64, "bytes": 67108864, "single_gbps": 23.2968, "single_spread": 0.0071, "parallel_gbps": 29.0631, "parallel_spread": 0.0935},
+    {"mib": 256, "bytes": 268435456, "single_gbps": 22.6767, "single_spread": 0.0207, "parallel_gbps": 27.5303, "parallel_spread": 0.0661},
+    {"mib": 512, "bytes": 536870912, "single_gbps": 22.8181, "single_spread": 0.0348, "parallel_gbps": 30.5240, "parallel_spread": 0.0333},
+    {"mib": 1024, "bytes": 1073741824, "single_gbps": 22.9231, "single_spread": 0.0229, "parallel_gbps": 31.2279, "parallel_spread": 0.0351},
+    {"mib": 2048, "bytes": 2147483648, "single_gbps": 20.2264, "single_spread": 0.1164, "parallel_gbps": 30.9379, "parallel_spread": 0.0267}
+  ]
+}

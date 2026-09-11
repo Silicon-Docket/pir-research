@@ -1,0 +1,89 @@
+pir-simplepir — SimplePIR (LWE) on the CPU, B = 1
+
+cpu:    11th Gen Intel(R) Core(TM) i5-11400 @ 2.60GHz
+host:   12 threads · L3 12 MiB
+scheme: n = 1024, p = 256, q = 2^32, error ~ centred binomial k = 82 (σ ≈ 6.40)
+corpus: synthetic; shape faithful, contents are not case law
+
+m = 2048   DB     4.2 MB
+    floor   1T      0.1 ms (74.39 GB/s)   12T      0.5 ms ( 8.56 GB/s)
+    answer  1T      0.4 ms (11.93 GB/s)   12T      0.4 ms ( 9.57 GB/s)
+    PIR multiplier  1T  6.23x   12T  0.89x   ·  spread 1T 26.0%/0.8%
+    hint     8.4 MB one-time · query    8.2 KB · answer    8.2 KB · margin 196σ
+    decode  OK   [809p3d971]
+
+m = 4096   DB    16.8 MB
+    floor   1T      0.5 ms (32.91 GB/s)   12T      0.6 ms (26.45 GB/s)
+    answer  1T      1.6 ms (10.54 GB/s)   12T      0.6 ms (27.65 GB/s)
+    PIR multiplier  1T  3.12x   12T  0.96x   ·  spread 1T 6.0%/1.5%
+    hint    16.8 MB one-time · query   16.4 KB · answer   16.4 KB · margin 139σ
+    decode  OK   [623p3d975]
+
+m = 8192   DB    67.1 MB
+    floor   1T      2.9 ms (23.40 GB/s)   12T      2.4 ms (27.42 GB/s)
+    answer  1T      6.3 ms (10.58 GB/s)   12T      2.5 ms (27.18 GB/s)
+    PIR multiplier  1T  2.21x   12T  1.01x   ·  spread 1T 2.8%/2.5%
+    hint    33.6 MB one-time · query   32.8 KB · answer   32.8 KB · margin 98σ
+    decode  OK   [194a2d1008]
+
+m = 16384  DB   268.4 MB
+    floor   1T     11.7 ms (22.94 GB/s)   12T      9.0 ms (29.77 GB/s)
+    answer  1T     24.9 ms (10.78 GB/s)   12T      9.1 ms (29.36 GB/s)
+    PIR multiplier  1T  2.13x   12T  1.01x   ·  spread 1T 0.9%/1.6%
+    hint    67.1 MB one-time · query   65.5 KB · answer   65.5 KB · margin 69σ
+    decode  OK   [324a2d1493]
+
+m = 23168  DB   536.8 MB
+    floor   1T     23.7 ms (22.69 GB/s)   12T     17.6 ms (30.51 GB/s)
+    answer  1T     49.8 ms (10.78 GB/s)   12T     18.0 ms (29.86 GB/s)
+    PIR multiplier  1T  2.10x   12T  1.02x   ·  spread 1T 3.8%/1.1%
+    hint    94.9 MB one-time · query   92.7 KB · answer   92.7 KB · margin 58σ
+    decode  OK   [612us100]
+
+m = 29312  DB   859.2 MB  <- the real index size
+    floor   1T     37.6 ms (22.87 GB/s)   12T     28.1 ms (30.54 GB/s)
+    answer  1T     80.3 ms (10.70 GB/s)   12T     28.0 ms (30.73 GB/s)
+    PIR multiplier  1T  2.14x   12T  0.99x   ·  spread 1T 7.6%/5.6%
+    hint   120.1 MB one-time · query  117.2 KB · answer  117.2 KB · margin 52σ
+    decode  OK   [226us884]
+
+m = 32768  DB  1073.7 MB
+    floor   1T     47.3 ms (22.72 GB/s)   12T     35.0 ms (30.70 GB/s)
+    answer  1T    100.5 ms (10.68 GB/s)   12T     34.7 ms (30.92 GB/s)
+    PIR multiplier  1T  2.13x   12T  0.99x   ·  spread 1T 1.7%/1.6%
+    hint   134.2 MB one-time · query  131.1 KB · answer  131.1 KB · margin 49σ
+    decode  OK   [790ne2d476]
+
+m = 46336  DB  2147.0 MB
+    floor   1T     97.2 ms (22.10 GB/s)   12T     69.4 ms (30.94 GB/s)
+    answer  1T    205.5 ms (10.45 GB/s)   12T     69.6 ms (30.86 GB/s)
+    PIR multiplier  1T  2.11x   12T  1.00x   ·  spread 1T 8.9%/3.4%
+    hint   189.8 MB one-time · query  185.3 KB · answer  185.3 KB · margin 41σ
+    decode  OK   [65us429]
+
+
+At the real index size (m = 29312, 859 MB, 6712448 records):
+  single core: 80 ms/query, 2.14x the linear-scan floor
+  12 threads:  28 ms/query, 0.99x the floor
+  demand is ~0.06 queries/s; one core answers 12/s, so ~208x headroom.
+
+--- json ---
+{
+  "arm": "cpu",
+  "cpu": "11th Gen Intel(R) Core(TM) i5-11400 @ 2.60GHz",
+  "threads": 12,
+  "l3_bytes": 12582912,
+  "batch": 1,
+  "scheme": {"name": "SimplePIR", "n": 1024, "log_p": 8, "cbd_k": 82},
+  "corpus": "synthetic (shape faithful, contents not case law)",
+  "rows": [
+    {"m": 2048, "db_bytes": 4194304, "hint_bytes": 8388608, "scan_single_s": 0.000056, "scan_parallel_s": 0.000490, "answer_single_s": 0.000351, "answer_parallel_s": 0.000438, "multiplier_single": 6.2337, "multiplier_parallel": 0.8937, "answer_single_spread": 0.0082, "margin_sigmas": 196.4, "decoded": true},
+    {"m": 4096, "db_bytes": 16777216, "hint_bytes": 16777216, "scan_single_s": 0.000510, "scan_parallel_s": 0.000634, "answer_single_s": 0.001592, "answer_parallel_s": 0.000607, "multiplier_single": 3.1238, "multiplier_parallel": 0.9566, "answer_single_spread": 0.0152, "margin_sigmas": 138.9, "decoded": true},
+    {"m": 8192, "db_bytes": 67108864, "hint_bytes": 33554432, "scan_single_s": 0.002868, "scan_parallel_s": 0.002447, "answer_single_s": 0.006346, "answer_parallel_s": 0.002469, "multiplier_single": 2.2125, "multiplier_parallel": 1.0090, "answer_single_spread": 0.0252, "margin_sigmas": 98.2, "decoded": true},
+    {"m": 16384, "db_bytes": 268435456, "hint_bytes": 67108864, "scan_single_s": 0.011703, "scan_parallel_s": 0.009017, "answer_single_s": 0.024893, "answer_parallel_s": 0.009143, "multiplier_single": 2.1271, "multiplier_parallel": 1.0140, "answer_single_spread": 0.0164, "margin_sigmas": 69.5, "decoded": true},
+    {"m": 23168, "db_bytes": 536756224, "hint_bytes": 94896128, "scan_single_s": 0.023652, "scan_parallel_s": 0.017595, "answer_single_s": 0.049774, "answer_parallel_s": 0.017973, "multiplier_single": 2.1044, "multiplier_parallel": 1.0215, "answer_single_spread": 0.0112, "margin_sigmas": 58.4, "decoded": true},
+    {"m": 29312, "db_bytes": 859193344, "hint_bytes": 120061952, "scan_single_s": 0.037576, "scan_parallel_s": 0.028136, "answer_single_s": 0.080321, "answer_parallel_s": 0.027957, "multiplier_single": 2.1376, "multiplier_parallel": 0.9936, "answer_single_spread": 0.0563, "margin_sigmas": 51.9, "decoded": true},
+    {"m": 32768, "db_bytes": 1073741824, "hint_bytes": 134217728, "scan_single_s": 0.047270, "scan_parallel_s": 0.034974, "answer_single_s": 0.100539, "answer_parallel_s": 0.034724, "multiplier_single": 2.1269, "multiplier_parallel": 0.9929, "answer_single_spread": 0.0156, "margin_sigmas": 49.1, "decoded": true},
+    {"m": 46336, "db_bytes": 2147024896, "hint_bytes": 189792256, "scan_single_s": 0.097163, "scan_parallel_s": 0.069404, "answer_single_s": 0.205469, "answer_parallel_s": 0.069583, "multiplier_single": 2.1147, "multiplier_parallel": 1.0026, "answer_single_spread": 0.0341, "margin_sigmas": 41.3, "decoded": true}
+  ]
+}

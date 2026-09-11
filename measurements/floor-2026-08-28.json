@@ -1,0 +1,14 @@
+{
+  "cpu": "Intel(R) Xeon(R) Processor @ 2.80GHz",
+  "threads": 4,
+  "l3_bytes": 34603008,
+  "repeats": 3,
+  "rows": [
+    {"mib": 16, "bytes": 16777216, "single_gbps": 14.4229, "single_spread": 0.2718, "parallel_gbps": 21.7344, "parallel_spread": 0.7315},
+    {"mib": 64, "bytes": 67108864, "single_gbps": 9.7151, "single_spread": 0.0197, "parallel_gbps": 17.8495, "parallel_spread": 0.3576},
+    {"mib": 256, "bytes": 268435456, "single_gbps": 9.5996, "single_spread": 0.0545, "parallel_gbps": 21.4176, "parallel_spread": 0.3402},
+    {"mib": 512, "bytes": 536870912, "single_gbps": 9.5270, "single_spread": 0.0136, "parallel_gbps": 18.8530, "parallel_spread": 0.2311},
+    {"mib": 1024, "bytes": 1073741824, "single_gbps": 9.9795, "single_spread": 0.0097, "parallel_gbps": 31.5137, "parallel_spread": 0.1425},
+    {"mib": 2048, "bytes": 2147483648, "single_gbps": 10.4615, "single_spread": 0.0185, "parallel_gbps": 33.8723, "parallel_spread": 0.2651}
+  ]
+}

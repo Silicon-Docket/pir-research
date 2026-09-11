@@ -1,0 +1,99 @@
+pir-gpu-hint — building H = D·A on the GPU
+
+device: NVIDIA GeForce GTX 1070 · cc 6.1 · 15 SMs @ 1.78 GHz · 7.0 GiB free of 8.0
+ceilings: 1139 GMAC/s emulated IMAD · 3418 GMAC/s DP4A (not implemented)
+watchdog: active · launches sized for 150 ms, budget 500 ms on wall time
+host:   11th Gen Intel(R) Core(TM) i5-11400 @ 2.60GHz · 12 threads
+corpus: synthetic; shape faithful, contents are not case law
+
+m = 2048   DB     4.2 MB · H    8.4 MB
+    upload D 2 ms · upload A 2 ms · download H 2 ms   (once, outside the figure)
+    GPU hint           6.6 ms  (   654 GMAC/s =   57% of the IMAD ceiling,  19% of DP4A)
+      1 launches x 2048 rows: min 6.6 / med 6.6 / max 6.6 ms · drift 3206.0 -> 3206.0 ns/row
+      probe 2.3 ms · wall max 6.6 ms · budget 500 ms — OK
+     14.7x the CPU's all-thread hint (96 ms) · one rebuild = 13 single-core CPU queries
+    GPU H == CPU H  bit-identical  ·  H·s == D·(A·s)  OK  ·  decode  OK
+
+m = 4096   DB    16.8 MB · H   16.8 MB
+    upload D 4 ms · upload A 4 ms · download H 5 ms   (once, outside the figure)
+    GPU hint          24.7 ms  (   696 GMAC/s =   61% of the IMAD ceiling,  20% of DP4A)
+      1 launches x 4096 rows: min 24.7 / med 24.7 / max 24.7 ms · drift 6027.3 -> 6027.3 ns/row
+      probe 4.4 ms · wall max 24.8 ms · budget 500 ms — OK
+     14.9x the CPU's all-thread hint (368 ms) · one rebuild = 16 single-core CPU queries
+    GPU H == CPU H  bit-identical  ·  H·s == D·(A·s)  OK  ·  decode  OK
+
+m = 8192   DB    67.1 MB · H   33.6 MB
+    upload D 16 ms · upload A 8 ms · download H 9 ms   (once, outside the figure)
+    GPU hint          96.6 ms  (   711 GMAC/s =   62% of the IMAD ceiling,  21% of DP4A)
+      1 launches x 8192 rows: min 96.6 / med 96.6 / max 96.6 ms · drift 11794.9 -> 11794.9 ns/row
+      probe 8.8 ms · wall max 96.7 ms · budget 500 ms — OK
+     14.4x the CPU's all-thread hint (1391 ms) · one rebuild = 14 single-core CPU queries
+    GPU H == CPU H  bit-identical  ·  H·s == D·(A·s)  OK  ·  decode  OK
+
+m = 16384  DB   268.4 MB · H   67.1 MB
+    upload D 61 ms · upload A 17 ms · download H 19 ms   (once, outside the figure)
+    GPU hint         351.3 ms  (   782 GMAC/s =   69% of the IMAD ceiling,  23% of DP4A)
+      4 launches x 4800 rows: min 45.4 / med 101.8 / max 102.5 ms · drift 21190.8 -> 22861.3 ns/row
+      probe 16.0 ms · wall max 102.6 ms · budget 500 ms — OK
+     18.6x the CPU's all-thread hint (6540 ms) · one rebuild = 13 single-core CPU queries
+    GPU H == CPU H  bit-identical  ·  H·s == D·(A·s)  OK  ·  decode  OK
+
+m = 23168  DB   536.8 MB · H   94.9 MB
+    upload D 129 ms · upload A 23 ms · download H 26 ms   (once, outside the figure)
+    GPU hint         783.5 ms  (   702 GMAC/s =   62% of the IMAD ceiling,  21% of DP4A)
+      12 launches x 1984 rows: min 39.8 / med 63.5 / max 89.2 ms · drift 44977.0 -> 29603.0 ns/row
+      probe 38.1 ms · wall max 89.4 ms · budget 500 ms — OK
+     17.8x the CPU's all-thread hint (13962 ms) · one rebuild = 15 single-core CPU queries
+    GPU H == CPU H  bit-identical  ·  H·s == D·(A·s)  OK  ·  decode  OK
+
+m = 29312  DB   859.2 MB · H  120.1 MB  <- the real index size
+    upload D 187 ms · upload A 28 ms · download H 32 ms   (once, outside the figure)
+    GPU hint        1171.1 ms  (   751 GMAC/s =   66% of the IMAD ceiling,  22% of DP4A)
+      10 launches x 2944 rows: min 102.0 / med 117.6 / max 127.2 ms · drift 41522.0 -> 36229.1 ns/row
+      probe 25.6 ms · wall max 127.4 ms · budget 500 ms — OK
+     22.3x the CPU's all-thread hint (26142 ms) · one rebuild = 14 single-core CPU queries
+    GPU H == CPU H  bit-identical  ·  H·s == D·(A·s)  OK  ·  decode  OK
+
+m = 32768  DB  1073.7 MB · H  134.2 MB
+    upload D 362 ms · upload A 30 ms · download H 36 ms   (once, outside the figure)
+    GPU hint        1359.9 ms  (   809 GMAC/s =   71% of the IMAD ceiling,  24% of DP4A)
+      14 launches x 2368 rows: min 91.2 / med 96.5 / max 102.1 ms · drift 42412.1 -> 45948.4 ns/row
+      probe 31.9 ms · wall max 102.2 ms · budget 500 ms — OK
+     23.8x the CPU's all-thread hint (32399 ms) · one rebuild = 13 single-core CPU queries
+    GPU H == CPU H  bit-identical  ·  H·s == D·(A·s)  OK  ·  decode  OK
+
+m = 46336  DB  2147.0 MB · H  189.8 MB
+    upload D 475 ms · upload A 40 ms · download H 315 ms   (once, outside the figure)
+    GPU hint        2819.0 ms  (   780 GMAC/s =   68% of the IMAD ceiling,  23% of DP4A)
+      26 launches x 1792 rows: min 98.5 / med 108.0 / max 117.2 ms · drift 60652.6 -> 64116.0 ns/row
+      probe 42.3 ms · wall max 117.3 ms · budget 500 ms — OK
+     24.8x the CPU's all-thread hint (69977 ms) · one rebuild = 13 single-core CPU queries
+    GPU H == CPU H  bit-identical  ·  H·s == D·(A·s)  OK  ·  decode  OK
+
+At the real index size (m = 29312, 859 MB):
+  one rebuild: 1.17 s in 10 launches, 751 GMAC/s (66% of the emulated-IMAD ceiling)
+  22.3x the 12-thread CPU hint on the same host
+  a rebuild costs what 14 single-core CPU queries cost
+  sustained-load check: last/first = 0.87x per row — no monotone decline, so the clock held
+
+--- json ---
+{
+  "arm": "gpu-hint",
+  "device": {"name": "NVIDIA GeForce GTX 1070", "cc": "6.1", "sms": 15},
+  "host_threads": 12,
+  "imad_ceiling_gmac": 1139.2,
+  "dp4a_ceiling_gmac": 3417.6,
+  "target_launch_ms": 150,
+  "watchdog_budget_ms": 500,
+  "corpus": "synthetic (shape faithful, contents not case law)",
+  "rows": [
+    {"m": 2048, "db_bytes": 4194304, "hint_bytes": 8388608, "hint_ms": 6.57, "launches": 1, "rows_per_launch": 2048, "probe_ms": 2.29, "drift_first_ns_per_row": 3206.0, "drift_last_ns_per_row": 3206.0, "kernel_min_ms": 6.57, "kernel_med_ms": 6.57, "kernel_max_ms": 6.57, "wall_max_ms": 6.64, "within_budget": true, "gmac_per_s": 654.1, "pct_imad_ceiling": 57.4, "pct_dp4a_ceiling": 19.1, "cpu_hint_parallel_ms": 96.3, "speedup_over_cpu": 14.67, "rebuild_in_cpu_queries": 12.5, "upload_db_ms": 1.7, "upload_a_ms": 2.3, "download_h_ms": 2.3, "bit_identical": true, "hs_matches": true, "decoded": true},
+    {"m": 4096, "db_bytes": 16777216, "hint_bytes": 16777216, "hint_ms": 24.69, "launches": 1, "rows_per_launch": 4096, "probe_ms": 4.41, "drift_first_ns_per_row": 6027.3, "drift_last_ns_per_row": 6027.3, "kernel_min_ms": 24.69, "kernel_med_ms": 24.69, "kernel_max_ms": 24.69, "wall_max_ms": 24.75, "within_budget": true, "gmac_per_s": 695.9, "pct_imad_ceiling": 61.1, "pct_dp4a_ceiling": 20.4, "cpu_hint_parallel_ms": 368.4, "speedup_over_cpu": 14.92, "rebuild_in_cpu_queries": 15.6, "upload_db_ms": 4.5, "upload_a_ms": 4.4, "download_h_ms": 4.6, "bit_identical": true, "hs_matches": true, "decoded": true},
+    {"m": 8192, "db_bytes": 67108864, "hint_bytes": 33554432, "hint_ms": 96.62, "launches": 1, "rows_per_launch": 8192, "probe_ms": 8.77, "drift_first_ns_per_row": 11794.9, "drift_last_ns_per_row": 11794.9, "kernel_min_ms": 96.62, "kernel_med_ms": 96.62, "kernel_max_ms": 96.62, "wall_max_ms": 96.70, "within_budget": true, "gmac_per_s": 711.2, "pct_imad_ceiling": 62.4, "pct_dp4a_ceiling": 20.8, "cpu_hint_parallel_ms": 1391.3, "speedup_over_cpu": 14.40, "rebuild_in_cpu_queries": 14.1, "upload_db_ms": 16.2, "upload_a_ms": 7.7, "download_h_ms": 9.2, "bit_identical": true, "hs_matches": true, "decoded": true},
+    {"m": 16384, "db_bytes": 268435456, "hint_bytes": 67108864, "hint_ms": 351.32, "launches": 4, "rows_per_launch": 4800, "probe_ms": 15.98, "drift_first_ns_per_row": 21190.8, "drift_last_ns_per_row": 22861.3, "kernel_min_ms": 45.36, "kernel_med_ms": 101.78, "kernel_max_ms": 102.46, "wall_max_ms": 102.58, "within_budget": true, "gmac_per_s": 782.4, "pct_imad_ceiling": 68.7, "pct_dp4a_ceiling": 22.9, "cpu_hint_parallel_ms": 6539.6, "speedup_over_cpu": 18.61, "rebuild_in_cpu_queries": 13.1, "upload_db_ms": 61.2, "upload_a_ms": 17.0, "download_h_ms": 18.8, "bit_identical": true, "hs_matches": true, "decoded": true},
+    {"m": 23168, "db_bytes": 536756224, "hint_bytes": 94896128, "hint_ms": 783.46, "launches": 12, "rows_per_launch": 1984, "probe_ms": 38.08, "drift_first_ns_per_row": 44977.0, "drift_last_ns_per_row": 29603.0, "kernel_min_ms": 39.79, "kernel_med_ms": 63.51, "kernel_max_ms": 89.23, "wall_max_ms": 89.37, "within_budget": true, "gmac_per_s": 701.6, "pct_imad_ceiling": 61.6, "pct_dp4a_ceiling": 20.5, "cpu_hint_parallel_ms": 13961.7, "speedup_over_cpu": 17.82, "rebuild_in_cpu_queries": 14.6, "upload_db_ms": 129.5, "upload_a_ms": 23.5, "download_h_ms": 25.9, "bit_identical": true, "hs_matches": true, "decoded": true},
+    {"m": 29312, "db_bytes": 859193344, "hint_bytes": 120061952, "hint_ms": 1171.06, "launches": 10, "rows_per_launch": 2944, "probe_ms": 25.57, "drift_first_ns_per_row": 41522.0, "drift_last_ns_per_row": 36229.1, "kernel_min_ms": 102.02, "kernel_med_ms": 117.55, "kernel_max_ms": 127.23, "wall_max_ms": 127.36, "within_budget": true, "gmac_per_s": 751.3, "pct_imad_ceiling": 65.9, "pct_dp4a_ceiling": 22.0, "cpu_hint_parallel_ms": 26142.3, "speedup_over_cpu": 22.32, "rebuild_in_cpu_queries": 13.8, "upload_db_ms": 186.7, "upload_a_ms": 28.3, "download_h_ms": 32.3, "bit_identical": true, "hs_matches": true, "decoded": true},
+    {"m": 32768, "db_bytes": 1073741824, "hint_bytes": 134217728, "hint_ms": 1359.92, "launches": 14, "rows_per_launch": 2368, "probe_ms": 31.90, "drift_first_ns_per_row": 42412.1, "drift_last_ns_per_row": 45948.4, "kernel_min_ms": 91.16, "kernel_med_ms": 96.48, "kernel_max_ms": 102.07, "wall_max_ms": 102.23, "within_budget": true, "gmac_per_s": 808.5, "pct_imad_ceiling": 71.0, "pct_dp4a_ceiling": 23.7, "cpu_hint_parallel_ms": 32398.8, "speedup_over_cpu": 23.82, "rebuild_in_cpu_queries": 12.7, "upload_db_ms": 362.3, "upload_a_ms": 30.2, "download_h_ms": 35.7, "bit_identical": true, "hs_matches": true, "decoded": true},
+    {"m": 46336, "db_bytes": 2147024896, "hint_bytes": 189792256, "hint_ms": 2818.96, "launches": 26, "rows_per_launch": 1792, "probe_ms": 42.29, "drift_first_ns_per_row": 60652.6, "drift_last_ns_per_row": 64116.0, "kernel_min_ms": 98.48, "kernel_med_ms": 107.95, "kernel_max_ms": 117.20, "wall_max_ms": 117.30, "within_budget": true, "gmac_per_s": 779.9, "pct_imad_ceiling": 68.5, "pct_dp4a_ceiling": 22.8, "cpu_hint_parallel_ms": 69976.8, "speedup_over_cpu": 24.82, "rebuild_in_cpu_queries": 13.1, "upload_db_ms": 475.4, "upload_a_ms": 39.7, "download_h_ms": 315.3, "bit_identical": true, "hs_matches": true, "decoded": true}
+  ]
+}

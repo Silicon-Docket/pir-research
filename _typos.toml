@@ -1,0 +1,12 @@
+# Spell checking over licensing prose needs a short leash. The words listed here
+# are abbreviations that are not English words and never will be, listed
+# individually rather than suppressed by pattern — a pattern would also hide
+# real typos in the prose around them.
+
+[default.extend-words]
+# "CC BY-ND 4.0" — the Creative Commons NoDerivatives term. It is the reason the
+# corpus work uses CAP rather than CourtListener's bulk exports, so it appears
+# wherever that choice is explained. Both cases: the licence name is upper, and
+# prose sometimes lowercases it.
+ND = "ND"
+nd = "nd"

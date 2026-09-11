@@ -1,0 +1,12 @@
+/target
+# A second target dir, used once to reproduce the default-target number in
+# .cargo/config.toml — the one that shows what `-C target-cpu=native` is worth.
+# Kept out of /target so the measured binaries are never a mix of the two.
+/target-baseline
+# CAP metadata is fetched, not vendored: tens of GB at full scale, and it is
+# reproducible from tools/fetch_cap.py plus the snapshot date in the manifest.
+/corpus
+# Built indexes are derived artifacts. The manifest that describes one is
+# committed; the multi-hundred-megabyte file it describes is not.
+*.pirdb
+tools/.nvrtc/

@@ -1,0 +1,216 @@
+{
+  "phase": "1",
+  "source": "Caselaw Access Project, static.case.law, metadata only",
+  "sample_definition": {
+    "target_records": 100000,
+    "records": 100394,
+    "volumes_used": 993,
+    "volume_misses": 0,
+    "reporters_absent": [
+      "a",
+      "p",
+      "ne",
+      "nw",
+      "se"
+    ],
+    "stratified_by": "jurisdiction class x era, round-robin, deterministic order",
+    "strata_available_volumes": {
+      "federal/pre-1950": 633,
+      "federal/1950-2000": 3008,
+      "federal/post-2000": 3155,
+      "state/pre-1950": 495,
+      "state/1950-2000": 3174,
+      "state/post-2000": 1522
+    },
+    "records_per_stratum": {
+      "federal/pre-1950": 42216,
+      "federal/1950-2000": 2883,
+      "federal/post-2000": 14084,
+      "state/pre-1950": 24672,
+      "state/1950-2000": 9316,
+      "state/post-2000": 7223
+    }
+  },
+  "year_bytes": 2,
+  "overall": {
+    "key": {
+      "n": 100394,
+      "mean": 8.95,
+      "median": 9,
+      "p95": 10,
+      "max": 12
+    },
+    "name": {
+      "n": 100394,
+      "mean": 28.79,
+      "median": 25,
+      "p95": 58,
+      "max": 176
+    },
+    "payload": {
+      "n": 100394,
+      "mean": 39.75,
+      "median": 35,
+      "p95": 69,
+      "max": 186
+    }
+  },
+  "by_stratum": {
+    "federal/1950-2000": {
+      "key": {
+        "n": 2883,
+        "mean": 8.77,
+        "median": 9,
+        "p95": 9,
+        "max": 9
+      },
+      "name": {
+        "n": 2883,
+        "mean": 26.11,
+        "median": 23,
+        "p95": 49,
+        "max": 93
+      },
+      "payload": {
+        "n": 2883,
+        "mean": 36.88,
+        "median": 34,
+        "p95": 59,
+        "max": 104
+      }
+    },
+    "federal/post-2000": {
+      "key": {
+        "n": 14084,
+        "mean": 9.17,
+        "median": 9,
+        "p95": 10,
+        "max": 12
+      },
+      "name": {
+        "n": 14084,
+        "mean": 33.02,
+        "median": 25,
+        "p95": 72,
+        "max": 145
+      },
+      "payload": {
+        "n": 14084,
+        "mean": 44.19,
+        "median": 36,
+        "p95": 83,
+        "max": 156
+      }
+    },
+    "federal/pre-1950": {
+      "key": {
+        "n": 42216,
+        "mean": 8.89,
+        "median": 9,
+        "p95": 10,
+        "max": 11
+      },
+      "name": {
+        "n": 42216,
+        "mean": 30.61,
+        "median": 28,
+        "p95": 56,
+        "max": 157
+      },
+      "payload": {
+        "n": 42216,
+        "mean": 41.5,
+        "median": 39,
+        "p95": 67,
+        "max": 167
+      }
+    },
+    "state/1950-2000": {
+      "key": {
+        "n": 9316,
+        "mean": 10.18,
+        "median": 10,
+        "p95": 11,
+        "max": 11
+      },
+      "name": {
+        "n": 9316,
+        "mean": 24.85,
+        "median": 16,
+        "p95": 63,
+        "max": 134
+      },
+      "payload": {
+        "n": 9316,
+        "mean": 37.03,
+        "median": 29,
+        "p95": 75,
+        "max": 145
+      }
+    },
+    "state/post-2000": {
+      "key": {
+        "n": 7223,
+        "mean": 10.16,
+        "median": 10,
+        "p95": 11,
+        "max": 11
+      },
+      "name": {
+        "n": 7223,
+        "mean": 25.54,
+        "median": 17,
+        "p95": 62,
+        "max": 122
+      },
+      "payload": {
+        "n": 7223,
+        "mean": 37.7,
+        "median": 29,
+        "p95": 74,
+        "max": 134
+      }
+    },
+    "state/pre-1950": {
+      "key": {
+        "n": 24672,
+        "mean": 8.13,
+        "median": 8,
+        "p95": 9,
+        "max": 9
+      },
+      "name": {
+        "n": 24672,
+        "mean": 26.03,
+        "median": 20,
+        "p95": 49,
+        "max": 176
+      },
+      "payload": {
+        "n": 24672,
+        "mean": 36.16,
+        "median": 31,
+        "p95": 59,
+        "max": 186
+      }
+    }
+  },
+  "entry_widths": {
+    "64": {
+      "records_intact_pct": 92.96,
+      "db_bytes_at_6_7m": 428800000
+    },
+    "96": {
+      "records_intact_pct": 99.563,
+      "db_bytes_at_6_7m": 643200000
+    },
+    "128": {
+      "records_intact_pct": 99.97,
+      "db_bytes_at_6_7m": 857600000
+    },
+    "256": {
+      "records_intact_pct": 100.0,
+      "db_bytes_at_6_7m": 1715200000
+    }
+  }
+}

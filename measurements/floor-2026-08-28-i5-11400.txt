@@ -1,0 +1,40 @@
+pir-bench — linear-scan floor
+
+cpu:  11th Gen Intel(R) Core(TM) i5-11400 @ 2.60GHz
+host: 12 threads · L3 12 MiB (knee expected here)
+repeats per size: 3 · minimum sample 50 ms
+
+    size    1-thread    spread    n-thread    spread
+--------  ----------  --------  ----------  --------
+     2 M    65.10 GB/s      0.6%     5.03 GB/s     14.4%
+     4 M    74.00 GB/s     14.9%     9.29 GB/s     14.3%
+    16 M    33.05 GB/s      3.9%    33.74 GB/s     16.0%
+    64 M    23.30 GB/s      0.7%    29.06 GB/s      9.4%
+   256 M    22.68 GB/s      2.1%    27.53 GB/s      6.6%
+   512 M    22.82 GB/s      3.5%    30.52 GB/s      3.3%
+  1024 M    22.92 GB/s      2.3%    31.23 GB/s      3.5%
+  2048 M    20.23 GB/s     11.6%    30.94 GB/s      2.7%
+
+WARNING: 2 size(s) vary by >10% across repeats. On a shared vCPU that can exceed the gap between adjacent sizes, which makes the knee unreadable. Re-run on a quiet machine before concluding.
+
+knee: 69.55 GB/s in cache vs 22.39 GB/s out — ratio 3.11x
+  Curve behaves as expected. Use the out-of-cache figure as the floor — it is the one the real index is subject to.
+
+--- json ---
+{
+  "cpu": "11th Gen Intel(R) Core(TM) i5-11400 @ 2.60GHz",
+  "threads": 12,
+  "l3_bytes": 12582912,
+  "repeats": 3,
+  "min_sample_ms": 50,
+  "rows": [
+    {"mib": 2, "bytes": 2097152, "single_gbps": 65.1027, "single_spread": 0.0061, "parallel_gbps": 5.0276, "parallel_spread": 0.1440},
+    {"mib": 4, "bytes": 4194304, "single_gbps": 73.9997, "single_spread": 0.1489, "parallel_gbps": 9.2886, "parallel_spread": 0.1425},
+    {"mib": 16, "bytes": 16777216, "single_gbps": 33.0496, "single_spread": 0.0386, "parallel_gbps": 33.7372, "parallel_spread": 0.1604},
+    {"mib": 64, "bytes": 67108864, "single_gbps": 23.2968, "single_spread": 0.0071, "parallel_gbps": 29.0631, "parallel_spread": 0.0935},
+    {"mib": 256, "bytes": 268435456, "single_gbps": 22.6767, "single_spread": 0.0207, "parallel_gbps": 27.5303, "parallel_spread": 0.0661},
+    {"mib": 512, "bytes": 536870912, "single_gbps": 22.8181, "single_spread": 0.0348, "parallel_gbps": 30.5240, "parallel_spread": 0.0333},
+    {"mib": 1024, "bytes": 1073741824, "single_gbps": 22.9231, "single_spread": 0.0229, "parallel_gbps": 31.2279, "parallel_spread": 0.0351},
+    {"mib": 2048, "bytes": 2147483648, "single_gbps": 20.2264, "single_spread": 0.1164, "parallel_gbps": 30.9379, "parallel_spread": 0.0267}
+  ]
+}

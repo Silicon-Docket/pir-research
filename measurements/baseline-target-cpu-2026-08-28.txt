@@ -1,0 +1,28 @@
+pir-simplepir — SimplePIR (LWE) on the CPU, B = 1
+
+cpu:    11th Gen Intel(R) Core(TM) i5-11400 @ 2.60GHz
+host:   12 threads · L3 12 MiB
+scheme: n = 1024, p = 256, q = 2^32, error ~ centred binomial k = 82 (σ ≈ 6.40)
+corpus: synthetic; shape faithful, contents are not case law
+
+m = 16384  DB   268.4 MB
+    floor   1T     12.4 ms (21.69 GB/s)   12T      9.0 ms (29.83 GB/s)
+    answer  1T     43.9 ms ( 6.11 GB/s)   12T      9.5 ms (28.39 GB/s)
+    PIR multiplier  1T  3.55x   12T  1.05x   ·  spread 1T 0.3%/0.4%
+    hint    67.1 MB one-time · query   65.5 KB · answer   65.5 KB · margin 69σ
+    decode  OK   [324a2d1493]
+
+
+--- json ---
+{
+  "arm": "cpu",
+  "cpu": "11th Gen Intel(R) Core(TM) i5-11400 @ 2.60GHz",
+  "threads": 12,
+  "l3_bytes": 12582912,
+  "batch": 1,
+  "scheme": {"name": "SimplePIR", "n": 1024, "log_p": 8, "cbd_k": 82},
+  "corpus": "synthetic (shape faithful, contents not case law)",
+  "rows": [
+    {"m": 16384, "db_bytes": 268435456, "hint_bytes": 67108864, "scan_single_s": 0.012374, "scan_parallel_s": 0.008998, "answer_single_s": 0.043932, "answer_parallel_s": 0.009457, "multiplier_single": 3.5504, "multiplier_parallel": 1.0510, "answer_single_spread": 0.0038, "margin_sigmas": 69.5, "decoded": true}
+  ]
+}

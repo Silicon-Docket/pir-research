@@ -1,0 +1,38 @@
+# Build for the machine the measurement runs on.
+#
+# Rust's default target is baseline x86-64 — SSE2, and therefore no 32-bit
+# vector multiply, which arrived with SSE4.1. SimplePIR's answer is a
+# byte-times-word multiply-accumulate over the whole database, so on the
+# default target it compiles to something far narrower than this machine can
+# actually issue.
+#
+# Measured on the i5-11400 this was developed on, at m = 16384 (268 MB), both
+# rows from the same source one build apart:
+#
+#                        floor 1T     answer 1T    multiplier 1T
+#     default target-cpu  21.69 GB/s   6.11 GB/s      3.55x
+#     target-cpu=native   22.94 GB/s  10.78 GB/s      2.13x
+#
+# The two rows come from two runs. The floor moved 5.8% between them, which is
+# what a desktop does; the answer moved 76%. Since the drift is an order of
+# magnitude smaller than the effect, the comparison holds — and the floor column
+# is quoted so that is checkable rather than asserted.
+#
+# So this changes only the numerator. Without it the headline multiplier would
+# have been two thirds too large, and it would have been read as a fact about
+# SimplePIR when it was a fact about the instruction set the binary happened to
+# be built for.
+#
+# To reproduce the first row without disturbing the measured binaries:
+#
+#     CARGO_TARGET_DIR=target-baseline RUSTFLAGS="" cargo build --release -p pir-simplepir
+#     ./target-baseline/release/pir-simplepir 16384
+#
+# Raw output is committed as measurements/baseline-target-cpu-2026-08-28.txt.
+#
+# The cost is that binaries are not portable off the build host. That is
+# acceptable here and nowhere near a product: every result in `measurements/`
+# already records the CPU it ran on, because a throughput figure with no
+# machine attached to it cannot be compared with anything.
+[build]
+rustflags = ["-C", "target-cpu=native"]

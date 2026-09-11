@@ -1,0 +1,80 @@
+pir-gpu-bench — SimplePIR (LWE) on the GPU, B = 1
+
+device: NVIDIA GeForce GTX 1070 · compute capability 6.1 · 15 SMs @ 1.78 GHz
+memory: 8.0 GiB total, 7.0 GiB free · 256-bit bus · 256 GB/s theoretical peak · L2 2048 KiB
+kernels: PTX for compute_61, JIT to sm_61 by the driver in 0.6 ms · display watchdog active (kernels must stay under ~2 s)
+host:   11th Gen Intel(R) Core(TM) i5-11400 @ 2.60GHz · 12 threads
+corpus: synthetic; shape faithful, contents are not case law
+
+m = 2048   DB     4.2 MB
+    device floor      0.06 ms (  70.4 GB/s)   ·  upload 2 ms (once)
+    GPU answer        0.06 ms (  72.8 GB/s)   ·  spread 20.1%
+    PIR multiplier  0.97x  ·   21.7x the CPU's all-thread answer (1 ms)
+    GPU == CPU  bit-identical   ·  decode  OK   [809p3d971]
+
+m = 4096   DB    16.8 MB
+    device floor      0.12 ms ( 137.2 GB/s)   ·  upload 5 ms (once)
+    GPU answer        0.11 ms ( 150.7 GB/s)   ·  spread 21.1%
+    PIR multiplier  0.91x  ·   18.8x the CPU's all-thread answer (2 ms)
+    GPU == CPU  bit-identical   ·  decode  OK   [623p3d975]
+
+m = 8192   DB    67.1 MB
+    device floor      0.34 ms ( 197.6 GB/s)   ·  upload 20 ms (once)
+    GPU answer        0.35 ms ( 190.1 GB/s)   ·  spread 14.9%
+    PIR multiplier  1.04x  ·    8.7x the CPU's all-thread answer (3 ms)
+    GPU == CPU  bit-identical   ·  decode  OK   [194a2d1008]
+
+m = 16384  DB   268.4 MB
+    device floor      1.29 ms ( 207.9 GB/s)   ·  upload 59 ms (once)
+    GPU answer        1.31 ms ( 205.5 GB/s)   ·  spread 2.6%
+    PIR multiplier  1.01x  ·    7.3x the CPU's all-thread answer (10 ms)
+    GPU == CPU  bit-identical   ·  decode  OK   [324a2d1493]
+
+m = 23168  DB   536.8 MB
+    device floor      2.54 ms ( 211.6 GB/s)   ·  upload 120 ms (once)
+    GPU answer        2.47 ms ( 217.6 GB/s)   ·  spread 0.1%
+    PIR multiplier  0.97x  ·    8.3x the CPU's all-thread answer (21 ms)
+    GPU == CPU  bit-identical   ·  decode  OK   [612us100]
+
+m = 29312  DB   859.2 MB  <- the real index size
+    device floor      4.00 ms ( 214.9 GB/s)   ·  upload 199 ms (once)
+    GPU answer        4.02 ms ( 213.8 GB/s)   ·  spread 0.1%
+    PIR multiplier  1.01x  ·    7.0x the CPU's all-thread answer (28 ms)
+    GPU == CPU  bit-identical   ·  decode  OK   [226us884]
+
+m = 32768  DB  1073.7 MB
+    device floor      4.93 ms ( 217.6 GB/s)   ·  upload 239 ms (once)
+    GPU answer        4.89 ms ( 219.6 GB/s)   ·  spread 0.1%
+    PIR multiplier  0.99x  ·    7.2x the CPU's all-thread answer (35 ms)
+    GPU == CPU  bit-identical   ·  decode  OK   [790ne2d476]
+
+m = 46336  DB  2147.0 MB
+    device floor      9.77 ms ( 219.8 GB/s)   ·  upload 469 ms (once)
+    GPU answer        9.86 ms ( 217.7 GB/s)   ·  spread 0.0%
+    PIR multiplier  1.01x  ·    7.1x the CPU's all-thread answer (70 ms)
+    GPU == CPU  bit-identical   ·  decode  OK   [65us429]
+
+At the real index size (m = 29312, 859 MB, 6712448 records):
+  4.0 ms/query at B = 1, 1.01x this device's own linear-scan floor
+  7x the 12-thread CPU answer on the same host
+  one card answers 249 queries/s against demand of ~0.06/s
+
+--- json ---
+{
+  "arm": "gpu",
+  "device": {"name": "NVIDIA GeForce GTX 1070", "cc": "6.1", "sms": 15, "bus_bits": 256, "peak_gbps": 256.3, "jit_ms": 0.6},
+  "host_threads": 12,
+  "batch": 1,
+  "scheme": {"name": "SimplePIR", "n": 1024, "log_p": 8, "cbd_k": 82},
+  "corpus": "synthetic (shape faithful, contents not case law)",
+  "rows": [
+    {"m": 2048, "db_bytes": 4194304, "upload_ms": 1.7, "gpu_scan_ms": 0.0596, "gpu_answer_ms": 0.0576, "gpu_answer_spread": 0.2006, "cpu_answer_parallel_ms": 1.25, "multiplier": 0.9672, "speedup_over_cpu": 21.68, "bit_identical": true, "decoded": true},
+    {"m": 4096, "db_bytes": 16777216, "upload_ms": 4.6, "gpu_scan_ms": 0.1223, "gpu_answer_ms": 0.1113, "gpu_answer_spread": 0.2108, "cpu_answer_parallel_ms": 2.09, "multiplier": 0.9100, "speedup_over_cpu": 18.79, "bit_identical": true, "decoded": true},
+    {"m": 8192, "db_bytes": 67108864, "upload_ms": 19.6, "gpu_scan_ms": 0.3396, "gpu_answer_ms": 0.3530, "gpu_answer_spread": 0.1493, "cpu_answer_parallel_ms": 3.06, "multiplier": 1.0394, "speedup_over_cpu": 8.67, "bit_identical": true, "decoded": true},
+    {"m": 16384, "db_bytes": 268435456, "upload_ms": 58.6, "gpu_scan_ms": 1.2912, "gpu_answer_ms": 1.3064, "gpu_answer_spread": 0.0257, "cpu_answer_parallel_ms": 9.56, "multiplier": 1.0117, "speedup_over_cpu": 7.32, "bit_identical": true, "decoded": true},
+    {"m": 23168, "db_bytes": 536756224, "upload_ms": 120.3, "gpu_scan_ms": 2.5365, "gpu_answer_ms": 2.4668, "gpu_answer_spread": 0.0008, "cpu_answer_parallel_ms": 20.55, "multiplier": 0.9725, "speedup_over_cpu": 8.33, "bit_identical": true, "decoded": true},
+    {"m": 29312, "db_bytes": 859193344, "upload_ms": 199.1, "gpu_scan_ms": 3.9972, "gpu_answer_ms": 4.0192, "gpu_answer_spread": 0.0008, "cpu_answer_parallel_ms": 28.19, "multiplier": 1.0055, "speedup_over_cpu": 7.01, "bit_identical": true, "decoded": true},
+    {"m": 32768, "db_bytes": 1073741824, "upload_ms": 238.9, "gpu_scan_ms": 4.9349, "gpu_answer_ms": 4.8886, "gpu_answer_spread": 0.0007, "cpu_answer_parallel_ms": 35.43, "multiplier": 0.9906, "speedup_over_cpu": 7.25, "bit_identical": true, "decoded": true},
+    {"m": 46336, "db_bytes": 2147024896, "upload_ms": 469.4, "gpu_scan_ms": 9.7659, "gpu_answer_ms": 9.8632, "gpu_answer_spread": 0.0003, "cpu_answer_parallel_ms": 69.64, "multiplier": 1.0100, "speedup_over_cpu": 7.06, "bit_identical": true, "decoded": true}
+  ]
+}

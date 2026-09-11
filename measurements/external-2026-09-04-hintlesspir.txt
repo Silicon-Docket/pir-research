@@ -1,0 +1,55 @@
+HintlessPIR reference implementation, run on this machine
+==================================================
+date        : 2026-09-04
+source      : github.com/google/hintless_pir @ 812babf (Apache-2.0)
+              Li, Micciancio, Raykova, Schultz-Wu, CRYPTO '24 /
+              IACR eprint 2023/1733
+binary      : hintless_simplepir/measure_main, built with Bazel 7.4.1,
+              CC=clang++, --noenable_workspace (bzlmod only)
+host        : Intel Xeon @ 2.10GHz, 4 vCPU, 15 GiB RAM
+build notes : This session's proxy blocks raw https://github.com/*/archive/*
+              fetches (the path Bazel's WORKSPACE/bzlmod http_archive rules
+              use) unless the repo is attached to the session. Rather than
+              attach every transitive dependency, each blocked module
+              (protobuf, tink_cc, highway, shell-encryption, glog, gflags)
+              was resolved by reading its exact pinned commit/tag and any
+              BCR patches from https://bcr.bazel.build/modules/<name>/<ver>/
+              source.json (a different, unblocked host), cloning the
+              upstream source via plain `git fetch` of that ref (also
+              unblocked), applying the listed patches, and passing
+              --override_module=<name>=<local dir> so bzlmod uses the
+              reconstructed tree instead of fetching the archive. No source
+              file of hintless_pir itself or its dependencies was modified;
+              the only added file is measure_main.cc, a new binary in the
+              same package, not part of upstream.
+params      : db_rows=229, db_cols=29312, db_record_bit_size=1024 (128
+              bytes), lwe_secret_dim=1400, lwe_modulus_bit_size=32,
+              lwe_plaintext_bit_size=8 (so num_shards=128), linpir_params
+              otherwise identical to the shipped hintless_simplepir_benchmarks.cc
+              default (log_n=12, rows_per_block=1024, ts={2056193,1990657},
+              qs={35184371884033,35184371703809}).
+why this shape : db_rows * db_cols = 6,712,448 exactly matches this
+              repository's own real record count (229 * 29312, m = 29312 in
+              the implementation under measurement). The split between db_rows and
+              db_cols is the shape that minimizes total client bytes
+              (request scales with db_cols, response with
+              num_shards * db_rows) for a fixed record count and record
+              width: db_rows = sqrt(N / num_shards) = sqrt(6712448/128) =
+              229 exactly, giving db_cols = 29312.
+why not 1-byte records : the shipped benchmark and the paper's own tables
+              use db_record_bit_size=8 (one shard). This repository's
+              records are 128 bytes, and RESULTS.md already flagged that
+              scaling num_shards changes the picture (as it did for YPIR
+              and VIA before this).
+
+################ measure_main output ################
+db_rows=229 db_cols=29312 records=6712448 record_bytes=128
+database fill: 29.7299 s
+Preprocess (hint computation, server-only, once per DB version): 6092.82 s
+public params (downloaded once, replaces the SimplePIR hint): 264 bytes
+client request generation: 12.8436 s
+request (up, per query): 513535 bytes
+server HandleRequest: avg 113.651 s over 5 reps
+response (down, per query): 23751495 bytes
+client recover: 2.56153 s
+CORRECTNESS: MATCH

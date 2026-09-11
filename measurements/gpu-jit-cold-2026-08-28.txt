@@ -1,0 +1,32 @@
+# Cold vs warm PTX JIT — measurements/gpu-jit-cold-2026-08-28.txt
+#
+# measurements/RESULTS.md claimed a cold JIT of ~102 ms from an uncommitted
+# observation. This is that comparison run properly. Same binary, same PTX,
+# same card, one run each, seconds apart. The only difference is whether the
+# driver's compute cache is allowed to answer.
+#
+# Cold: CUDA_CACHE_DISABLE=1 forces the driver to compile compute_61 PTX to
+# sm_61 on every load. Warm: the default, which lets it reuse a cached image.
+#
+# If the two numbers do not differ materially, this run proved nothing and
+# says so rather than being presented as evidence.
+
+=== cold (CUDA_CACHE_DISABLE=1) ===
+pir-gpu-bench — SimplePIR (LWE) on the GPU, B = 1
+
+device: NVIDIA GeForce GTX 1070 · compute capability 6.1 · 15 SMs @ 1.78 GHz
+memory: 8.0 GiB total, 7.0 GiB free · 256-bit bus · 256 GB/s theoretical peak · L2 2048 KiB
+kernels: PTX for compute_61, JIT to sm_61 by the driver in 33.2 ms · display watchdog active (kernels must stay under ~2 s)
+host:   11th Gen Intel(R) Core(TM) i5-11400 @ 2.60GHz · 12 threads
+corpus: synthetic; shape faithful, contents are not case law
+
+
+=== warm (default, cache allowed) ===
+pir-gpu-bench — SimplePIR (LWE) on the GPU, B = 1
+
+device: NVIDIA GeForce GTX 1070 · compute capability 6.1 · 15 SMs @ 1.78 GHz
+memory: 8.0 GiB total, 7.0 GiB free · 256-bit bus · 256 GB/s theoretical peak · L2 2048 KiB
+kernels: PTX for compute_61, JIT to sm_61 by the driver in 0.6 ms · display watchdog active (kernels must stay under ~2 s)
+host:   11th Gen Intel(R) Core(TM) i5-11400 @ 2.60GHz · 12 threads
+corpus: synthetic; shape faithful, contents are not case law
+
