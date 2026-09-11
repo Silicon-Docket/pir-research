@@ -152,12 +152,22 @@ kernel source it is compiled from is part of what is held back.
    statistics: 100,394 records, 993 volumes, 0 misses, a 39.75 B payload, and
    99.970% of records intact at a 128 B entry width, from which `m = 29312` and
    859.2 MB follow. Nothing in this path depends on anything held back.
-3. **Rebuild the PTX toolchain.** `tools/build_ptx.py` fetches a pinned NVRTC
-   12.9.86, targets `compute_61`, rewrites the `.file` directive to a
-   repository-relative path and writes LF, so that a second machine compiling
-   the same kernel gets the same bytes. It expects a kernel source this
-   repository does not carry, so what reproduces is the method, which is the
-   subject of `docs/adr/0002-pascal-without-a-pascal-toolkit.md`.
+3. **Rebuild the PTX toolchain, against any kernel.** `tools/build_ptx.py`
+   takes the kernel, the output path and the target architecture as arguments;
+   it fetches a pinned NVRTC 12.9.86 into a gitignored directory, compiles for
+   an architecture the installed nvcc may refuse, rewrites the `.file` directive
+   NVRTC emits from an absolute path to one relative to the working directory,
+   and writes LF, so that a second machine compiling the same kernel gets the
+   same bytes. `--check` recompiles and compares rather than writing, so a stale
+   PTX is caught rather than shipped.
+
+   It was verified end to end while this repository was assembled, on a machine
+   with **no CUDA toolkit and no GPU at all**: the wheel fetched, a scratch
+   kernel compiled for `compute_61`, the `.file` directive normalised, and
+   `--check` correctly rejected the PTX after the kernel changed. The kernel it
+   was originally written for is part of what is held back, so what reproduces
+   is the method, which is the subject of
+   `docs/adr/0002-pascal-without-a-pascal-toolkit.md`.
 4. **Rebuild all four third-party implementations and re-run them at this
    shape.** This is how every comparative claim here was made. Each external
    scheme was built and run at `m = 29312` with 128-byte records, because every
