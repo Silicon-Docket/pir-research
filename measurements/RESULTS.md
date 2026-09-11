@@ -30,8 +30,10 @@ are made against the declared reference workload of `SCOPE.md` section 3: an
 arrival rate of **lambda = 0.06 queries/second** (one arrival every roughly 16.7
 seconds) and **Q = 157 queries per client per rebuild period**. Those are stated
 evaluation parameters, in the same sense that the database size is a stated
-input; substitute your own. Every latency, bandwidth and throughput figure below
-is a measurement and is independent of both.
+input; substitute your own. The latencies, throughputs and per-query byte counts
+below are measurements and are independent of both. The headroom figures scale
+with lambda, the total-client-bytes comparisons move with Q, and the crossover
+points are properties of the schemes rather than of the workload.
 
 **The implementation under measurement is not published here** (`SCOPE.md`
 section 2), so the SimplePIR and hint figures are reported rather than
@@ -141,13 +143,14 @@ return 404, which is why `tools/fetch_cap.py` carries `nw2d` and `se2d` in its
 third-series line. Those two slugs therefore appear twice in `REPORTERS`, and
 the tool deduplicates with `dict.fromkeys` so they are not double-weighted.
 
-So "post-2000" means **2001 to 2019**, and the conclusion two subsections above,
-that the long-modern-names worry is dead, holds over that window and says
-nothing about cases decided after 2019. Nothing in this file depends on the
-missing years: m = 29312 is fixed by the payload mean, the mean is stable to
-within 1.4% between two independently drawn samples, and every stratum sits
-between 36.16 and 44.19 B. But the bound belongs in the sample definition rather
-than in a reader's inference from a reporter list.
+So "post-2000" means **2001 to 2019**, and the conclusion of *The worry that
+motivated the wider sample is dead* above, that the long-modern-names worry is
+dead, holds over that window and says nothing about cases decided after 2019.
+Nothing in this file depends on the missing years: m = 29312 is fixed by the
+payload mean, the mean is stable to within 1.4% between two independently drawn
+samples, and every stratum sits between 36.16 and 44.19 B. But the bound belongs
+in the sample definition rather than in a reader's inference from a reporter
+list.
 
 ### The 96 B option, named and not taken
 

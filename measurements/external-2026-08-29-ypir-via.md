@@ -23,7 +23,9 @@ Two conventions this file depends on. Where a comparison below uses a query
 volume or an arrival rate, both come from the **declared reference workload**:
 lambda = 0.06 queries/second and Q = 157 queries per client per rebuild period.
 Those are stated evaluation parameters rather than measurements, and
-`SCOPE.md` section 3 defines them and is the only place they are defined. And
+`SCOPE.md` section 3 is their reference definition; where this file restates
+them, it restates those same two values rather than justifying them
+independently. And
 the SimplePIR implementation the "ours" rows come from is not published here
 (`SCOPE.md` section 2); it is called *the implementation under measurement*, and
 no path inside it is cited.

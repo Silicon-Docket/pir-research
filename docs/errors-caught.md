@@ -35,8 +35,9 @@ to each other:
 
 Where a comparison uses the **declared reference workload** (lambda = 0.06
 queries/second, Q = 157 queries per client per rebuild period), those are stated
-evaluation parameters rather than measurements. `SCOPE.md` section 3 defines
-them and is the only place they are defined.
+evaluation parameters rather than measurements. `SCOPE.md` section 3 is their
+reference definition; where this file or any other restates them, it restates
+these same two values rather than justifying them independently.
 
 The SimplePIR implementation these figures came from is not published here; it
 is called *the implementation under measurement* throughout, and no path inside
@@ -64,7 +65,7 @@ claim against the artifact or the source behind it:
 | # | The error | What would have been published | What is true | What caught it |
 |---|---|---|---|---|
 | 8 | A section heading left at an earlier draft's figure | GPU multiplier **1.03** in a heading, above a table reading 1.01 | **1.01** (raw: `multiplier` 1.0055) | Reading the heading against the table under it and against `gpu-simplepir-2026-08-28.json` |
-| 9 | A run-to-run spread quoted from an uncommitted observation | **a 379% spread** at m = 23168 | **0.1%** at that row; the largest spread anywhere in the GPU sweep is 21.1% at m = 4096 | Searching the committed artifacts for the figure and not finding it |
+| 9 | A run-to-run spread quoted from an uncommitted observation | **a 379% spread** at m = 23168 | **0.1%** at that row; the largest spread anywhere in the GPU answer sweep is 21.1% at m = 4096 | Searching the committed artifacts for the figure and not finding it |
 | 10 | The harness stated the direction of its own bias backwards, in published code | "a floor that is too HIGH makes the PIR multiplier too SMALL, which flatters the scheme" | An inflated floor **inflates** the multiplier: the in-cache row at m = 2048 has a 74.90 GB/s floor and the sweep's **largest** multiplier, 6.23 | Deriving the direction from the definition, then checking it against the sweep's own rows |
 
 ---
@@ -193,11 +194,13 @@ Normalised to ns/row the same series reads:
 |---|---|---|---|
 | per-launch cost, normalised | 41522 ns/row | 36229 ns/row | **0.87** |
 
-so the clock held. Per-launch wall times for that row are min 102.0, median
-117.6, max 127.2 ms against a 500 ms budget. Raw:
-`measurements/gpu-hint-2026-08-28.json`, fields `drift_first_ns_per_row` and
-`drift_last_ns_per_row`, with `measurements/gpu-hint-2026-08-28.txt` carrying
-the same series in the printed sweep.
+so the clock held. Per-launch kernel times for that row are min 102.0, median
+117.6, max 127.2 ms, and the wall maximum the budget is actually checked against
+is 127.4 ms, against a 500 ms budget. Raw:
+`measurements/gpu-hint-2026-08-28.json`, fields `drift_first_ns_per_row`,
+`drift_last_ns_per_row`, `kernel_min_ms`, `kernel_med_ms`, `kernel_max_ms` and
+`wall_max_ms`, with `measurements/gpu-hint-2026-08-28.txt` carrying the same
+series in the printed sweep.
 
 The budget is checked on **wall** time rather than CUDA event time, because on
 WDDM a launch queued behind display work accumulates time that events never see,
@@ -481,8 +484,11 @@ gpu-simplepir-2026-08-28.json, m = 23168: "gpu_answer_spread": 0.0008
 gpu-simplepir-2026-08-28.txt,  line 35:   spread 0.1%
 ```
 
-The string `379` does not appear anywhere under `measurements/`. The largest
-run-to-run spread in the entire GPU answer sweep is 21.1%, at m = 4096:
+No committed measurement artifact contains that figure: the only occurrences of
+`379` under `measurements/` are the corrections quoting the retracted sentence
+and an unrelated `30.9379 GB/s` in `measurements/floor-2026-08-28-i5-11400.json`
+and its `.txt`. The largest run-to-run spread in the entire GPU answer sweep is
+21.1%, at m = 4096:
 
 | m | 2048 | 4096 | 8192 | 16384 | 23168 | 29312 | 32768 | 46336 |
 |---|---|---|---|---|---|---|---|---|
@@ -493,7 +499,7 @@ The superseded sentence is the one that said 379%.
 **This is entry 4 happening a second time, in the same section of the same
 file.** Entry 4 is a cold JIT figure quoted from an observation that was never
 committed, and its correction in `measurements/RESULTS.md` states the rule it
-broke. The 379% claim broke the same rule, sat four paragraphs away from the
+broke. The 379% claim broke the same rule, sat two paragraphs away from the
 correction that named it, and survived anyway.
 
 What survives the correction is the methodological point the sentence was making,
@@ -546,10 +552,15 @@ The superseded sentence is the one quoted above. The replacement gives both
 directions and says the ratio does not distinguish them.
 
 **No committed figure moves.** That branch prints only when the knee ratio is
-below 1.15, and every committed sweep passed it: 3.11x on the i5-11400, and
-2.47x on the container this repository was assembled on. It was a wrong
-diagnostic rather than a wrong measurement, which is precisely why nothing
-caught it: it had never run.
+below 1.15, and every committed sweep passed it: 3.11x on the i5-11400
+(`measurements/floor-2026-08-28-i5-11400.txt`), and 1.46x on the shared Xeon
+(`measurements/floor-2026-08-28.json`, 14.42 GB/s in cache against an
+out-of-cache floor of about 10 GB/s). It was a wrong diagnostic rather than a
+wrong measurement, which is precisely why nothing caught it: no committed sweep
+ever printed it. Two of the three shared-Xeon sweeps did fall below 1.15, at
+ratios of 1.00x and 0.70x against the 1.46x of the third and only committed one
+(`measurements/RESULTS.md`, Phase 4a), so the branch ran and its output was
+read; nothing in this repository holds that output.
 
 ## The pattern
 
@@ -595,11 +606,13 @@ The practice that follows from this is the one the external write-ups state as a
 rule: **check record width before believing any published figure, and run the
 reference implementation rather than extrapolating its table.** It is the same
 discipline in each case, and it is why four third-party implementations were
-built from source and re-measured here rather than cited. Three of the findings
-above exist only because that was done; two others exist because a figure from
-outside was available to compare against; and the remaining two exist because a
-number with no artifact behind it is treated here as a claim rather than as a
-measurement.
+built from source and re-measured here rather than cited. Two of the findings
+above exist only because that was done (entries 6 and 7); three others exist
+because a figure from outside was available to compare against (the instruction
+set in entry 1, YPIR's published throughput in entry 2, SimplePIR's Remark 5.1
+in entry 5); one exists because a number with no artifact behind it is treated
+here as a claim rather than as a measurement (entry 4); and one, entry 3,
+because the result pointed in a direction hardware cannot go.
 
 The corresponding limit, stated rather than smoothed: this mechanism only finds
 errors in quantities that somebody outside has also measured. Where no outside
@@ -624,10 +637,10 @@ of them constrains a *sentence*. So a heading could drift 2% from its own table
 (entry 8), a spread could be quoted that no artifact contains (entry 9), and a
 diagnostic could state its own bias backwards in shipped code (entry 10), and
 every gate in the repository would still pass, because none of them reads prose
-and entry 10's branch had never executed.
+and no committed artifact carries entry 10's branch output.
 
 Two of those three are instances of a failure this work had already named. Entry
-9 is entry 4 repeating, in the same section of the same file, four paragraphs
+9 is entry 4 repeating, in the same section of the same file, two paragraphs
 from the correction that states the rule it breaks. **Writing a rule down did
 not enforce it.** The check that enforced it was mechanical and took one search:
 look for the figure in `measurements/` and find nothing.

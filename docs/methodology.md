@@ -319,10 +319,12 @@ Two more properties of the gating, rather than of any one gate:
 
 ## 6. Check against a number from outside
 
-Self-consistency is not evidence. Both of the measurement errors this repository
-caught before publication were caught by the same mechanism, and it was not
-review or testing: an external figure existed that our own number could be held
-against, and it disagreed.
+Self-consistency is not evidence. Ten errors were found in this work's own
+numbers and claims before publication, and `docs/errors-caught.md` records every
+one. Five of the seven found during the work were caught by the same mechanism,
+and it was not review or testing: an external figure existed that our own number
+could be held against, and it disagreed. Two of those five are where this
+section's rule comes from.
 
 - Built at Rust's default x86-64 target, which has no 32-bit vector multiply,
   the answer measured 6.11 GB/s and the multiplier came out at **3.55x** instead
@@ -334,8 +336,9 @@ against, and it disagreed.
   9.80 MB/s per core, **2.5x**. A factor of four, and the slow version was
   plausible enough to publish.
 
-Both are written up with the numbers they would have published in
-`docs/errors-caught.md`. The generalisation is the rule this section states:
+Both of those are written up, with the numbers they would have published, in
+`docs/errors-caught.md`, alongside the other eight. The generalisation is the
+rule this section states:
 **where an outside number exists, quote it and check against it; where none
 exists, say so and report against a ceiling instead.**
 
@@ -424,11 +427,20 @@ The harness keeps best, median and worst across repeats and reports the
 **median** with the **spread**, defined as (worst minus best) divided by the
 median. Averaging would hide exactly what the spread is for.
 
-The case that justifies it: one GPU row (m = 23168) had a **379% spread** while
-its median stayed in line with its neighbours. The card drives a display, so
-that is a stall, not a measurement. A mean would have been dragged down and the
-row would have looked like a slow size; the median plus the spread makes it
-visible as what it is. Nothing was dropped, and nothing was smoothed.
+The case that justifies it is the two smallest GPU rows. At m = 4096 the
+run-to-run spread is **21.1%**, the largest anywhere in the GPU answer sweep,
+and at m = 2048 it is **20.1%**, against 0.1% at m = 23168 and 0.1% at the real
+index size (`measurements/gpu-simplepir-2026-08-28.json`, field
+`gpu_answer_spread`). A mean would have absorbed those two rows into the curve;
+the median with the spread beside it is what makes them excludable rather than
+smoothed away. Nothing was dropped.
+
+> **Correction.** This paragraph read: *"one GPU row (m = 23168) had a 379%
+> spread while its median stayed in line with its neighbours. The card drives a
+> display, so that is a stall, not a measurement."* The committed artifact
+> records `"gpu_answer_spread": 0.0008` at that row, which is 0.1%, and the
+> string `379` appears nowhere under `measurements/`. The superseded sentence is
+> the one that said 379%, and `docs/errors-caught.md` entry 9 records it.
 
 The spread also does the work in three other places:
 
@@ -508,13 +520,25 @@ Where this sample is weak, stated rather than smoothed:
 - **6.7M is the corpus's own stated coverage, not something this sample
   measured.** The sample fixes the record *size*; the record *count* is taken
   from the Caselaw Access Project's description of itself.
+- **The post-2000 stratum is bounded above by the corpus's own coverage, which
+  ends in 2019.** This was not stated when the stratum was defined and it should
+  have been, because the worry the wider sample was built to test is
+  specifically that *modern* names run long. Checked against the source on
+  2026-09-11, the last volume in each current-series reporter
+  `tools/fetch_cap.py` pulls runs no later than 2019: `a3d` 2004-2019 (253
+  volumes), `p3d` 2000-2019 (447), `sw3d` 1993-2018 (579), `ne3d` 2003-2018
+  (130), `f3d` 1993-2019 (935), `f-supp-3d` 2005-2019 (386). Two regions have no
+  third series in the corpus at all, so `nw2d` and `se2d` stand in on the
+  third-series line. So *post-2000* means 2001 to 2019.
 - The sample also **overturned the worry that motivated it**. The prediction was
   that modern state-court names would run far longer and that post-2000 state
   volumes were where the estimate was weakest. Measured, that stratum has the
   smallest mean of the three post-2000 groups, and the longest record in the
   whole sample is a pre-1950 state case at 186 B. Modern federal names are the
-  long ones. The superseded sentence is the one that said the post-2000 state
-  slice is where the long names are.
+  long ones. That holds over the 2001 to 2019 window the stratum actually
+  covers, and says nothing about cases decided after 2019. The superseded
+  sentence is the one that said the post-2000 state slice is where the long
+  names are.
 
 ---
 

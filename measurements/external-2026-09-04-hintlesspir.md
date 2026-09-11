@@ -42,7 +42,9 @@ under measurement takes about itself (`SCOPE.md` section 4).
 the "ours" rows below, so the per-core time comparison in the latency section
 crosses hosts. It is kept, and stated as cross-host rather than smoothed,
 because the gap it reports is three orders of magnitude and the clock
-difference between these two hosts is a factor of 1.24.
+difference between these two hosts is a factor of 1.24 (2.60 GHz against
+2.10 GHz, as `measurements/RESULTS.md` and
+`external-2026-09-04-hintlesspir.txt` record them).
 
 **The shape.** HintlessPIR parameterizes the database as `db_rows x db_cols`
 matrices, one per shard, where `num_shards = record_bit_size /

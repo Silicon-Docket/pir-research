@@ -27,7 +27,7 @@ file is to say which, without the reader having to work it out.
 | `docs/errors-caught.md` | The measurement errors found before publication, each with the outside number that caught it |
 | `docs/adr/0001-gpu-before-fpga-for-pir.md` | The hardware decision, and the rules the measurements had to follow to settle it |
 | `docs/adr/0002-pascal-without-a-pascal-toolkit.md` | Targeting a GPU architecture that the installed toolkit will no longer compile for |
-| `measurements/external-2026-08-29-ypir-via.md` | YPIR and VIA, built and run at this index shape |
+| `measurements/external-2026-08-29-ypir-via.md` | YPIR at this index shape; VIA at a reduced column count, because its shipped configuration does not fit this machine's RAM |
 | `measurements/external-2026-09-04-hintlesspir.md` | HintlessPIR, built and run at this index shape |
 | `measurements/crate-comparison-2026-08-28.md` | An independent third-party Rust SimplePIR, read and measured against ours |
 | `LICENSES.md` | The terms of every corpus and third-party input, including the ones recorded as unchecked |
@@ -169,10 +169,16 @@ kernel source it is compiled from is part of what is held back.
    is the method, which is the subject of
    `docs/adr/0002-pascal-without-a-pascal-toolkit.md`.
 4. **Rebuild all four third-party implementations and re-run them at this
-   shape.** This is how every comparative claim here was made. Each external
-   scheme was built and run at `m = 29312` with 128-byte records, because every
-   published figure for these schemes is measured at 1-bit or 1-byte records and
-   record width is exactly where the first candidate collapsed. The commits are
+   index shape, or as near to it as each one can be run.** This is how every
+   comparative claim here was made. YPIR and HintlessPIR were built and run at
+   `m = 29312` with 128-byte records; VIA could not be, because its shipped
+   configuration stores a 4 GiB database as 32 GiB of NTT coefficients and is
+   OOM-killed on a 16 GB machine, so it was run at a reduced `LOG_COL` and its
+   byte totals corrected off that run; the third-party crate was compared at
+   `m = 2048` for throughput and at `m = 29312` for hint and query size. Every
+   comparison is at 128-byte records, because every published figure for these
+   schemes is measured at 1-bit or 1-byte records and record width is exactly
+   where the first candidate collapsed. The commits are
    recorded in `LICENSES.md` and repeated in the external write-ups:
 
    | Implementation | Commit or version | Terms | Write-up |
@@ -220,11 +226,12 @@ workload**:
 > **lambda = 0.06 queries/second** (one arrival every roughly 16.7 seconds),
 > and **Q = 157 queries per client per rebuild period.**
 
-These are **evaluation parameters, not measurements**. They are stated inputs in
-the same sense that the database size is a stated input, they were not derived
-from any observed traffic, and no claim is made that they describe anyone's real
-demand. Substitute your own. This section is the single place they are defined;
-the other documents refer here rather than redefining them.
+These are **evaluation parameters, not measurements**. They are stated inputs
+in the same sense that the database size is a stated input, they were not
+derived from any observed traffic, and no claim is made that they describe
+anyone's real demand. Substitute your own. This section is the reference
+definition. Where the other documents restate lambda and Q, they restate these
+same two values rather than justifying them independently.
 
 **What depends on lambda.** Every headroom figure. A single desktop core answers
 a query over the whole 859 MB index in 80.3 ms, which is roughly 208x the
@@ -292,15 +299,18 @@ coverage and is not something this sample measured. Full statement in
 
 ### The measurement environment
 
-The desktop was running a desktop, and several spreads above 10% say so; they do
-not touch the knee, whose two sides differ by 3.1x. The GPU drives a display,
-which cost one row a 379% spread with its median in line with its neighbours,
-and which is why the hint kernel probes and sizes its launches against a wall
-clock budget rather than an assumed rate. Of the three shared-Xeon floor sweeps
-only one is committed, so the 0.6% to 3.7% band quoted for that host cannot be
-re-derived from this repository. In the sweeps, one record per size is decoded
-end to end, at the midpoint of the database; four positions are checked only at
-`m = 256`, so "decode OK" in a sweep row is not exhaustive over the layout.
+The desktop was running a desktop, and several spreads above 10% say so; they
+do not touch the knee, whose two sides differ by 3.1x. The GPU drives a
+display, which is why medians are reported with the run-to-run spread printed
+beside them (the largest spread anywhere in the GPU answer sweep is 21.1% at
+`m = 4096`, against 0.1% at the real index size) and why the hint kernel probes
+and sizes its launches against a wall clock budget rather than an assumed rate:
+on a display-driving card a launch past roughly two seconds kills the driver.
+Of the three shared-Xeon floor sweeps only one is committed, so the 0.6% to 3.7%
+band quoted for that host cannot be re-derived from this repository. In the
+sweeps, one record per size is decoded end to end, at the midpoint of the
+database; four positions are checked only at `m = 256`, so "decode OK" in a
+sweep row is not exhaustive over the layout.
 
 ---
 

@@ -114,7 +114,7 @@ anything:
 
 | | source | result at our shape |
 |---|---|---|
-| `simplepir` 1.0.1 | `XiXinping/simplepir-rs`, MIT | different parameter set (q = 2^64, n = 2048): 480.2 MB hint against our 120.1 MB, 4x the paper's published size |
+| `simplepir` 1.0.1 | `XiXinping/simplepir-rs`, MIT | different parameter set (q = 2^64, n = 2048): 480.2 MB hint against our 120.1 MB at m = 29312, 4x ours; the same parameters at 1 GB give 518 MB, 4.3x the paper's published 121 MB |
 | **YPIR** (USENIX Sec '24) | `menonsamir/ypir` @ `a73e550` | hint-free claim holds (0 bytes), 155 ms server, but one-byte items, so a 128-byte record costs 128 queries: **behind our hint after 1.1 queries** |
 | **VIA** (IEEE S&P '26) | `owniai/VIA` @ `f65aa9d` | records are >= 512 B, so one query covers one of ours: 93.2 MB against our 156.9 MB at Q = 157, and **stays ahead to 335 queries per rebuild period** |
 | **HintlessPIR** (CRYPTO '24) | `google/hintless_pir` @ `812babf` | 264-byte public params, but 22.65 MiB down per query and 113.65 s server time per query: **behind our hint after 5.0 queries** |

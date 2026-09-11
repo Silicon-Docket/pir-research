@@ -85,7 +85,8 @@ compile for the card anyway.
    published in this repository, and no PTX is published here. The driver
    JIT-compiles it to `sm_61` at module load, in tens of milliseconds, reported
    separately from every timing so it never lands inside a per-query figure
-   (measured: 33.2 ms cold against 0.6 ms warm,
+   (measured: 33.2 ms cold against 0.6 ms warm, one run each, which fixes the
+   order of magnitude and the sign but not the ratio to two figures,
    `measurements/gpu-jit-cold-2026-08-28.txt`). Consequence: the crate builds
    with **no CUDA toolkit present at all**, and the kernel that was measured is
    in the repository it belongs to as readable text rather than being whatever

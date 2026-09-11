@@ -144,9 +144,14 @@ all.
 Single-server PIR is simply more expensive than two-server PIR, and this
 decision pays that difference deliberately.
 
-The comparison, as carried in Tan et al. All rows are that paper's figures at
-its default configuration of 256 B entries and batch size B = 512, on the
-hardware its section 6 names (RTX 4090 24 GB, V100 32 GB, Xeon Gold 5418Y):
+The comparison, as carried in Tan et al. The first three rows are that paper's
+figures at its default configuration of N = 2^23, 256 B entries and batch size
+B = 512, on the hardware its section 6 names (RTX 4090 24 GB, V100 32 GB,
+Xeon Gold 5418Y). The last two rows are the single-server reference points that
+paper carries for comparison, at their own configurations: SimplePIR at a 1 GB
+database (Table 3, where the *Servers* column reads 1), and Lehmkuhl,
+Henzinger, Corrigan-Gibbs at N = 2^24 on a V100 (Table 2, marked as reported in
+that paper rather than re-measured):
 
 | Scheme | pirs/sec | N | Hardware | Servers |
 |---|---|---|---|---|
@@ -168,18 +173,18 @@ the option being rejected is the safe direction for it to be uncontrolled in.
 
 Two caveats belong with those numbers, and they cut in opposite directions.
 
-**The batching caveat.** Every throughput figure above is measured at B = 512,
-which the paper says plainly is the point *"at which GPU utilization is
-saturated."* Batching amortizes one pass over the database across many
-concurrent queries. Against the declared reference workload defined in
-`SCOPE.md` (arrival rate lambda = 0.06 queries/second, Q = 157 queries per
-client per rebuild period, both stated evaluation parameters and not
-measurements), no batch forms: queries arrive alone, and the number that matters
-is single-query latency, which these tables do not report for the full PIR.
-Table 1 reports it for the DPF tree expansion alone, 4.28 ms at layer 23 on the
-RTX 4090, for a batch of 512 trees. So the same tables that show the gap are
-optimizing a metric this workload does not have, and the gap at B = 1 is not
-established by them.
+**The batching caveat.** Every headline throughput above, meaning the first
+three rows, is measured at B = 512, which the paper says plainly is the point
+*"at which GPU utilization is saturated."* Batching amortizes one pass over the
+database across many concurrent queries. Against the declared reference
+workload defined in `SCOPE.md` (arrival rate lambda = 0.06 queries/second,
+Q = 157 queries per client per rebuild period, both stated evaluation
+parameters and not measurements), no batch forms: queries arrive alone, and the
+number that matters is single-query latency, which these tables do not report
+for the full PIR. Table 1 reports it for the DPF tree expansion alone, 4.28 ms
+at layer 23 on the RTX 4090, for a batch of 512 trees. So the same tables that
+show the gap are optimizing a metric this workload does not have, and the gap at
+B = 1 is not established by them.
 
 **The cost is affordable at this workload, which is why paying it was
 available.** Our own single-server measurement, at m = 29312 (859.2 MB,
