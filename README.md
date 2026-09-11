@@ -133,8 +133,11 @@ than used to dismiss the scheme: VIA is still the only external scheme ahead of
 our hint on total client bytes, and its throughput gap to us is a lower bound
 until it reads a database it actually touches.
 
-**Two of our own measurement errors, caught before publication and recorded
-rather than quietly fixed** (`docs/errors-caught.md`). Building at Rust's
+**Ten of our own errors, caught before publication and recorded rather than
+quietly fixed** (`docs/errors-caught.md`). Seven were found while the work was
+being done and three more while it was being prepared for this repository, by
+reading each written claim back against the artifact behind it. The two the
+summary above rests on: building at Rust's
 default x86-64 target, which has no 32-bit vector multiply, would have reported
 a multiplier of 3.55x instead of 2.13x at m = 16384: two thirds too large, and
 it would have been read as a fact about SimplePIR rather than about a build

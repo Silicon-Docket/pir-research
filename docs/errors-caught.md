@@ -1,17 +1,26 @@
 # Errors caught before publication
 
-Seven errors were found in this work's own numbers before those numbers were
-published. Several had already been committed to this repository's own
-documents and are marked as superseded there; one was fixed before its figure
-was ever committed. This file records, for each one, what the wrong number was,
-what would have gone out instead, and what caught it.
+Ten errors were found in this work's own numbers and claims before those
+numbers were published. Seven were found while the work was being done; three
+more were found while the work was being prepared for this repository, by
+checking every sentence against the artifact behind it. Several had already been
+committed to internal documents and are marked as superseded there; one was
+fixed before its figure was ever committed. This file records, for each one,
+what the wrong number was, what would have gone out instead, and what caught it.
 
 It is kept for two reasons. The first is that a repository which reports only
 its final numbers gives a reader nothing to judge the process by. The second is
-narrower and is the argument this file exists to make: **five of the seven were
-caught by a number or an artifact from outside this work, and none of the seven
-could have been caught by internal consistency.** Every one of them produced a
-self-consistent result. Several produced a *plausible* one, which is worse.
+narrower and is the argument this file exists to make: **five of the first seven
+were caught by a number or an artifact from outside this work, and none of the
+seven could have been caught by internal consistency.** Every one of them
+produced a self-consistent result. Several produced a *plausible* one, which is
+worse.
+
+The last three sharpen that argument rather than repeating it. They were caught
+by a mechanism the first seven never applied to themselves: reading each written
+claim back against the committed artifact or the source file it describes, on
+the way out the door. All three had survived the whole of the work that produced
+them.
 
 Conventions here are the ones used everywhere in this repository. Every figure
 names its host and its sample. A correction names the sentence it supersedes
@@ -48,6 +57,15 @@ artifact under `measurements/` are published, and are cited by name.
 
 Errors 1 and 2 are the two the `README.md` summarises. Errors 6 and 7 are the
 same error one layer apart, which is the reason both are listed.
+
+Three more were found while preparing this repository, by checking each written
+claim against the artifact or the source behind it:
+
+| # | The error | What would have been published | What is true | What caught it |
+|---|---|---|---|---|
+| 8 | A section heading left at an earlier draft's figure | GPU multiplier **1.03** in a heading, above a table reading 1.01 | **1.01** (raw: `multiplier` 1.0055) | Reading the heading against the table under it and against `gpu-simplepir-2026-08-28.json` |
+| 9 | A run-to-run spread quoted from an uncommitted observation | **a 379% spread** at m = 23168 | **0.1%** at that row; the largest spread anywhere in the GPU sweep is 21.1% at m = 4096 | Searching the committed artifacts for the figure and not finding it |
+| 10 | The harness stated the direction of its own bias backwards, in published code | "a floor that is too HIGH makes the PIR multiplier too SMALL, which flatters the scheme" | An inflated floor **inflates** the multiplier: the in-cache row at m = 2048 has a 74.90 GB/s floor and the sweep's **largest** multiplier, 6.23 | Deriving the direction from the definition, then checking it against the sweep's own rows |
 
 ---
 
@@ -413,9 +431,130 @@ rather than discovered later.
 
 ---
 
+---
+
+# Found while preparing this repository
+
+The three below were not found by running anything. They were found by reading
+each written claim back against the artifact or the source file it describes,
+while porting this work into a public repository. All three had survived the
+whole of the work that produced them, and two had been committed and read many
+times.
+
+They are listed with the first seven rather than in a separate file because they
+are the same kind of failure: a number that was right when it was written down,
+or never right at all, and that nothing afterwards was obliged to re-check.
+
+## 8. A heading left at an earlier draft's figure
+
+The GPU section carried the heading **"What a multiplier of 1.03 means"**. The
+table immediately above it reads 1.01, the sentence immediately above it reads
+"a multiplier of 1.01x", and the raw artifact agrees:
+
+```
+gpu-simplepir-2026-08-28.json, m = 29312: "multiplier": 1.0055
+```
+
+**1.01 is correct and the heading was stale.** The superseded text is the
+heading that read 1.03.
+
+This is the smallest error in this file and it is listed because of where it
+sat. A heading is the part of a section a reader remembers, and it is the part
+no check touches: the decode gates, the bit-identity checks and the spread
+figures all constrain the table, and none of them constrains the sentence above
+the table. The prose and the artifact had drifted apart by 2% in the direction
+that makes the scheme look worse, and nothing in the pipeline was going to
+notice, because nothing in the pipeline reads prose.
+
+## 9. A spread quoted from an observation that was never committed
+
+The same section said:
+
+> **One row had a 379% spread** (m = 23168) while its median stayed in line with
+> its neighbours. The card is driving a display; that is a stall, not a
+> measurement.
+
+**The committed artifacts contradict it.** That row's spread is 0.1%:
+
+```
+gpu-simplepir-2026-08-28.json, m = 23168: "gpu_answer_spread": 0.0008
+gpu-simplepir-2026-08-28.txt,  line 35:   spread 0.1%
+```
+
+The string `379` does not appear anywhere under `measurements/`. The largest
+run-to-run spread in the entire GPU answer sweep is 21.1%, at m = 4096:
+
+| m | 2048 | 4096 | 8192 | 16384 | 23168 | 29312 | 32768 | 46336 |
+|---|---|---|---|---|---|---|---|---|
+| spread | 20.1% | **21.1%** | 14.9% | 2.6% | 0.1% | 0.1% | 0.1% | 0.0% |
+
+The superseded sentence is the one that said 379%.
+
+**This is entry 4 happening a second time, in the same section of the same
+file.** Entry 4 is a cold JIT figure quoted from an observation that was never
+committed, and its correction in `measurements/RESULTS.md` states the rule it
+broke. The 379% claim broke the same rule, sat four paragraphs away from the
+correction that named it, and survived anyway.
+
+What survives the correction is the methodological point the sentence was making,
+which is true and is supported by different rows: medians are reported with the
+spread printed beside them, so a noisy row is visible rather than smoothed away.
+The 20.1% and 21.1% spreads at the two smallest sizes are what make those rows
+excludable, and `measurements/RESULTS.md` already uses them for exactly that. The
+sentence did not need an invented row to make its point, which is the most
+uncomfortable part of it.
+
+## 10. The harness stated the direction of its own bias backwards
+
+This one is in **published code**, and a reader can check it:
+`crates/pir-bench/src/main.rs`, in the branch that runs when the knee cannot be
+certified. It read:
+
+> Consequence for the headline metric: a floor that is too HIGH makes the PIR
+> multiplier too SMALL, which flatters the scheme. Treat any multiplier derived
+> from this run as a lower bound on the true one.
+
+**That is inverted.** The multiplier is `answer_seconds / scan_seconds`, and
+`scan_seconds` is `bytes / floor`, so the multiplier scales *with* the floor.
+Overstate the floor and the multiplier comes out too large, which makes the
+scheme look more expensive than it is. Understate it and the multiplier comes
+out too small, which is the direction that flatters.
+
+The sweep's own data settles it without any argument from definitions. At
+m = 2048 the 4.2 MB database sits inside the host's 12 MiB L3, so its floor is
+measured in cache and is inflated:
+
+| m | DB | floor | answer | multiplier |
+|---|---|---|---|---|
+| **2048** | **4.2 MB (in L3)** | **74.90 GB/s** | 11.95 GB/s | **6.23** |
+| 16384 | 268.4 MB | 22.94 GB/s | 10.78 GB/s | 2.13 |
+| 29312 | 859.2 MB | 22.87 GB/s | 10.70 GB/s | 2.14 |
+
+The inflated floor produces the largest multiplier in the sweep, not the
+smallest.
+
+There is a second problem in the same sentence, independent of the direction. It
+gives **one** consequence for **two** causes that bias opposite ways, and the two
+verdicts printed immediately above it already concede that the ratio cannot
+separate them ("either the working set is not leaving cache, or the scan loop is
+slower than this machine's memory"). A working set that never left cache
+overstates the floor and makes the multiplier an upper bound; a scan loop that
+caps below memory bandwidth understates it and makes the multiplier a lower
+bound. The text asserted the second for both.
+
+The superseded sentence is the one quoted above. The replacement gives both
+directions and says the ratio does not distinguish them.
+
+**No committed figure moves.** That branch prints only when the knee ratio is
+below 1.15, and every committed sweep passed it: 3.11x on the i5-11400, and
+2.47x on the container this repository was assembled on. It was a wrong
+diagnostic rather than a wrong measurement, which is precisely why nothing
+caught it: it had never run.
+
 ## The pattern
 
-**Five of the seven were caught by an external number or an external artifact.**
+**Of the seven found during the work, five were caught by an external number or
+an external artifact.**
 
 | | what was outside this work |
 |---|---|
@@ -470,3 +609,32 @@ across the sweep, because no published work reports a throughput for
 GPU-accelerated SimplePIR offline preprocessing). That is weaker than an
 independent measurement, and nothing in this file should be read as claiming
 otherwise.
+
+### The three found on the way out are a different mechanism, and a gap
+
+Entries 8, 9 and 10 were not caught by anything external and not caught by
+running anything. They were caught by reading each written claim back against
+the committed artifact or the source file it describes, once, at the point of
+publication.
+
+That is worth naming because of what it says about the first seven. Every
+verification gate in this work constrains a *computation*: bit-identity between
+arms, the `H.s == D.(A.s)` shortcut, decode through the materialised hint. None
+of them constrains a *sentence*. So a heading could drift 2% from its own table
+(entry 8), a spread could be quoted that no artifact contains (entry 9), and a
+diagnostic could state its own bias backwards in shipped code (entry 10), and
+every gate in the repository would still pass, because none of them reads prose
+and entry 10's branch had never executed.
+
+Two of those three are instances of a failure this work had already named. Entry
+9 is entry 4 repeating, in the same section of the same file, four paragraphs
+from the correction that states the rule it breaks. **Writing a rule down did
+not enforce it.** The check that enforced it was mechanical and took one search:
+look for the figure in `measurements/` and find nothing.
+
+The gap this leaves is not closed. There is no automated check in this
+repository that a number in prose matches the artifact it cites, and the three
+entries above were found by hand. A reader should treat the prose here as
+carefully checked at one point in time rather than as continuously verified, and
+the raw artifacts under `measurements/` as the authority wherever the two
+disagree.
