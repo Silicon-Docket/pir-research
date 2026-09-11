@@ -260,10 +260,27 @@ fn print_knee(rows: &[Row], l3: Option<usize>) {
         );
     }
     if ratio < 1.15 {
+        // The multiplier is answer_seconds / scan_seconds, and scan_seconds is
+        // bytes / floor, so the multiplier scales *with* the floor: overstate the
+        // floor and the multiplier comes out too large, understate it and the
+        // multiplier comes out too small. This block used to say the opposite
+        // ("a floor that is too HIGH makes the PIR multiplier too SMALL"), and
+        // the sweep's own data refutes it: the in-cache row at m = 2048 has an
+        // inflated 74.9 GB/s floor and the *largest* multiplier in the sweep,
+        // 6.23, against ~2.1 once the database leaves cache. The superseded
+        // sentence is the one that read "too HIGH ... too SMALL".
+        //
+        // It also gave one direction for two causes that bias opposite ways, and
+        // the ratio alone cannot separate them, which is why the verdicts above
+        // say "either ... or".
         println!(
-            "  Consequence for the headline metric: a floor that is too HIGH makes the \
-             PIR multiplier too SMALL, which flatters the scheme. Treat any multiplier \
-             derived from this run as a lower bound on the true one."
+            "  Consequence for the headline metric: the multiplier scales with this \
+             floor. If the cause is a working set that never left cache, the floor is \
+             overstated and any multiplier derived from this run is an UPPER bound. If \
+             the cause is a scan loop that caps below this machine's memory bandwidth, \
+             the floor is understated, the multiplier is too small and flatters the \
+             scheme, and it is a LOWER bound. This ratio does not say which, so \
+             establish the cause before using the number in either direction."
         );
     }
     println!();
