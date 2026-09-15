@@ -14,7 +14,7 @@ of the metric (`crates/pir-bench`). The SimplePIR implementation those timings
 came from, referred to throughout as *the implementation under measurement*, is
 not published here; `SCOPE.md` says what is in and what is out.
 
-Nothing here is a security artefact. See *Status and limits* before citing any
+Nothing here is a security artifact. See *Status and limits* before citing any
 number in this file.
 
 ## Why single-server
@@ -193,7 +193,7 @@ measured for its own sake first.
 
 Stated plainly, because each one bounds what these numbers are good for.
 
-- **Nothing here is a security artefact.** The error sampler is a centred
+- **Nothing here is a security artifact.** The error sampler is a centred
   binomial, the secret comes from a general-purpose PRNG, and **no parameter set
   has been through a lattice estimator**. That is the top open item. A
   back-of-envelope root-Hermite estimate is not an estimator run.
